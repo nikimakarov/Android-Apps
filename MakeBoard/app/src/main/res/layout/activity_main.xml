@@ -21,7 +21,6 @@
             android:layout_width="20dp"
             android:layout_height="53dp"
             android:layout_weight="0.82"
-            android:fontFamily="sans-serif-medium"
             android:hint="@string/enter"
             android:inputType="number"
             android:maxLength="1000"
@@ -30,13 +29,7 @@
             android:textAllCaps="true"
             android:textColor="@color/silver"
             android:textSize="25sp"
-            android:typeface="sans"
-            android:textStyle="normal"
-            android:textIsSelectable="false"
-            android:maxLines="1"
-            android:longClickable="false"
-            android:clickable="false"
-            android:autoText="false" />
+            android:maxLines="1"/>
 
         <ImageView
             android:id="@+id/button"
@@ -45,9 +38,10 @@
             android:layout_weight="0.1"
             android:background="@drawable/img"
             android:contentDescription="@string/desc" />
+
     </LinearLayout>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:id="@+id/scroll"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -59,5 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             </TableLayout>
+
     </ScrollView>
+
 </LinearLayout>
