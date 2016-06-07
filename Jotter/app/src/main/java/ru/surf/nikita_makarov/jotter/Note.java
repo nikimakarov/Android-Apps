@@ -20,19 +20,30 @@ import java.util.ArrayList;
 
 public class Note extends Fragment {
 
-    public GridLayout button;
+    public LinearLayout button;
     public TextView txt, txt2;
+    public int fragmentId = 0;
+    public String fragmentText, fragmentTheme;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        Bundle bundle = getArguments();
+        fragmentId = bundle.getInt("id");
+        fragmentTheme = bundle.getString("theme");
+        fragmentText = bundle.getString("text");
     }
 
     @Override
     //вызывается один раз, когда фрагмент должен загрузить на экран свой интерфейс
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.note, container, false);
+        View view =  inflater.inflate(R.layout.note, container, false);
+        button = (LinearLayout) view.findViewById(R.id.note);
+        txt = (TextView) view.findViewById(R.id.text);
+        txt2 = (TextView) view.findViewById(R.id.text2);
+        updateTextView();
+        return view;
     }
 
     @Override
@@ -42,9 +53,12 @@ public class Note extends Fragment {
     // чтобы получить родительскую активность.
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        button = (GridLayout) getView().findViewById(R.id.note);
-        txt = (TextView) getView().findViewById(R.id.text);
-        txt2 = (TextView) getView().findViewById(R.id.text2);
+    }
+
+    public void updateTextView()
+    {
+        this.txt.setText(fragmentTheme);
+        this.txt2.setText(fragmentText);
     }
 
 }

@@ -1,53 +1,38 @@
 package ru.surf.nikita_makarov.jotter;
 
-import android.app.VoiceInteractor;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.GridView;
-import android.widget.TextView;
-import android.widget.Toast;
-import java.util.ArrayList;
 
     public class MainActivity extends AppCompatActivity {
 
-        String th = "", tx = "";
-        public int x = 0;
+        public String themeShow = "", textShow = "";
+        public int fragmentId = 1;
+        public FragmentManager manager;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
+            manager = getSupportFragmentManager();
             if (savedInstanceState!=null) {
-                th = savedInstanceState.getString("theme");
-                tx = savedInstanceState.getString("text");
-                MakeFragment(th,tx);
+                themeShow = savedInstanceState.getString("theme");
+                textShow = savedInstanceState.getString("text");
+                fragmentId = savedInstanceState.getInt("id");
+                if (fragmentId!=1)
+                {
+                    MakeFragment(themeShow, textShow, fragmentId);
+                }
             }
             else
             {
-                final FragmentManager fm = getSupportFragmentManager();
-                final Note fragment1 = new Note();
-                fm.beginTransaction().add(R.id.grid_view_a, fragment1).commit();
-                final Note fragment2 = new Note();
-                fm.beginTransaction().add(R.id.grid_view_b, fragment2).commit();
+                MakeFragment("Start","using Jotter now!",0);
+                MakeFragment("Make", "your first note!",1);
             }
-
-            GridLayout grid1 = (GridLayout) findViewById(R.id.grid_view_a);
-            GridLayout grid2 = (GridLayout) findViewById(R.id.grid_view_b);
 
         }
 
@@ -59,20 +44,26 @@ import java.util.ArrayList;
         }
 
         @Override
-        public boolean onOptionsItemSelected(android.view.MenuItem item)
-        {
-            final int itemId = item.getItemId();
+        public boolean onOptionsItemSelected(android.view.MenuItem item) {
             Intent intObj = new Intent(this, AddNoteActivity.class);
-            intObj.putExtra("id", x);
+            fragmentId+=1;
+            intObj.putExtra("id", fragmentId);
             startActivity(intObj);
             return true;
         }
 
-        public void MakeFragment(String th1, String tx1) {
-            final FragmentManager manager = getSupportFragmentManager();
-            final Note fragment1 = new Note();
-            fragment1.txt.setText(th1);
-            fragment1.txt2.setText(tx1);
-            manager.beginTransaction().add(R.id.grid_view_a, fragment1).commit();
+        public void MakeFragment(String theme, String text, int id) {
+            final Note fragmentInput = new Note();
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", id);
+            bundle.putString("theme", theme);
+            bundle.putString("text", text);
+            fragmentInput.setArguments(bundle);
+            if (id%2==0){
+                manager.beginTransaction().add(R.id.grid_view_a, fragmentInput).commit();
+            }
+            else{
+                manager.beginTransaction().add(R.id.grid_view_b, fragmentInput).commit();
+            }
         }
     }

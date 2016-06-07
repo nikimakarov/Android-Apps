@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Jotter</string>
     <string name="add">Add</string>
+    <string name="save_button">Save it!</string>
+    <string name="text">Add text:</string>
+    <string name="theme">Add theme:</string>
 </resources>
