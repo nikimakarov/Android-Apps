@@ -12,7 +12,7 @@ public class Note extends Fragment {
 
     public LinearLayout button;
     public TextView txt, txt2;
-    public int fragmentId = 0;
+    public int fragmentId = 0, fragmentColor = 0;
     public String fragmentText, fragmentTheme;
 
     @Override
@@ -23,6 +23,7 @@ public class Note extends Fragment {
         fragmentId = bundle.getInt("id");
         fragmentTheme = bundle.getString("theme");
         fragmentText = bundle.getString("text");
+        fragmentColor = bundle.getInt("color");
     }
 
     @Override
@@ -31,6 +32,7 @@ public class Note extends Fragment {
         button = (LinearLayout) view.findViewById(R.id.note);
         txt = (TextView) view.findViewById(R.id.text);
         txt2 = (TextView) view.findViewById(R.id.text2);
+        view.setBackgroundColor(fragmentColor);
         updateTextView();
         return view;
     }
@@ -45,5 +47,4 @@ public class Note extends Fragment {
         this.txt.setText(fragmentTheme);
         this.txt2.setText(fragmentText);
     }
-
 }

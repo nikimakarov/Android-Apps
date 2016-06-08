@@ -55,7 +55,8 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@color/colorPrimary"
-        android:clickable = "true"
-        android:text="@string/save_button" />
+        android:clickable="true"
+        android:text="@string/save_button"
+        android:textColor="@color/white" />
 
 </RelativeLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/yellow"
+        android:orderInCategory="4"
+        app:showAsAction="always"
+        android:title="@string/yellow"
+        android:icon="@drawable/yellow">
+    </item>
+    <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/red"
+        android:orderInCategory="3"
+        app:showAsAction="always"
+        android:title="@string/red"
+        android:icon="@drawable/red">
+    </item>
+    <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/green"
+        android:orderInCategory="2"
+        app:showAsAction="always"
+        android:title="@string/green"
+        android:icon="@drawable/green">
+    </item>
+    <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/blue"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        android:title="@string/blue"
+        android:icon="@drawable/blue">
+    </item>
+    <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/violet"
+        android:orderInCategory="5"
+        app:showAsAction="ifRoom"
+        android:title="@string/violet"
+        android:icon="@drawable/violet">
+    </item>
+    <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pink"
+        android:orderInCategory="6"
+        app:showAsAction="ifRoom"
+        android:title="@string/pink"
+        android:icon="@drawable/pink">
+    </item>
+</menu>
