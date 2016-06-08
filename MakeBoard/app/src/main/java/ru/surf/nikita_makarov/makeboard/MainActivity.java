@@ -47,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void makeBoard() {
         try {
-            int parity = 0;
-            int shift = 0;
+            int parity, shift;
             inputNumber = Integer.parseInt(editText.getText().toString());
             for (int i = 0; i < inputNumber; i++) {
                 LinearLayout table_view = (LinearLayout) inflater.inflate(R.layout.table, null);

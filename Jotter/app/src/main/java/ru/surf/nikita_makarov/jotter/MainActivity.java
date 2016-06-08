@@ -4,36 +4,34 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.GridLayout;
+import ru.surf.nikita_makarov.jotter.FeedReaderContract.FeedReaderDBHelper;
 
     public class MainActivity extends AppCompatActivity {
-
-        public String themeShow = "", textShow = "";
-        public int fragmentId = 1;
-        public FragmentManager manager;
+        //FeedReaderDBHelper dbHelper;
+        public int fragmentId;
+        public FragmentManager manager = getSupportFragmentManager();
+        public String TAG = "MainActivity";
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
-            manager = getSupportFragmentManager();
+                String themeShow, textShow;
             if (savedInstanceState!=null) {
                 themeShow = savedInstanceState.getString("theme");
                 textShow = savedInstanceState.getString("text");
                 fragmentId = savedInstanceState.getInt("id");
-                if (fragmentId!=1)
-                {
-                    MakeFragment(themeShow, textShow, fragmentId);
-                }
             }
-            else
-            {
-                MakeFragment("Start","using Jotter now!",0);
-                MakeFragment("Make", "your first note!",1);
+            else{
+                fragmentId = 0;
+                themeShow = "Start";
+                textShow = "using Jotter now!";
             }
-
+                super.onCreate(savedInstanceState);
+                setContentView(R.layout.activity_main);
+                //dbHelper = new FeedReaderDBHelper(this);
+                MakeFragment(themeShow, textShow, fragmentId);
         }
 
         @Override
@@ -46,13 +44,17 @@ import android.widget.GridLayout;
         @Override
         public boolean onOptionsItemSelected(android.view.MenuItem item) {
             Intent intObj = new Intent(this, AddNoteActivity.class);
-            fragmentId+=1;
+            fragmentId = fragmentId+1;
             intObj.putExtra("id", fragmentId);
             startActivity(intObj);
             return true;
         }
 
         public void MakeFragment(String theme, String text, int id) {
+            Log.v(TAG, "MakeFragment opening");
+            Log.v(TAG, theme);
+            Log.v(TAG, text);
+            Log.v(TAG, Integer.toString(id));
             final Note fragmentInput = new Note();
             Bundle bundle = new Bundle();
             bundle.putInt("id", id);
