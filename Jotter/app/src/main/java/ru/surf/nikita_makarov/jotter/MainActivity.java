@@ -1,8 +1,6 @@
 package ru.surf.nikita_makarov.jotter;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,19 +8,39 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-import ru.surf.nikita_makarov.jotter.FeedReaderContract.FeedReaderDBHelper;
-
 public class MainActivity extends AppCompatActivity {
-    FeedReaderDBHelper dbHelper;
+    public int fragmentId;
     public FragmentManager manager = getSupportFragmentManager();
+    public String TAG = "MainActivity";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle onSaveInstanceState) {
+        fragmentId = 0;
+        String themeShow = "Start";
+        String textShow = "using Jotter now!";
+        super.onCreate(onSaveInstanceState);
         setContentView(R.layout.activity_main);
-        dbHelper = new FeedReaderDBHelper(this);
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
-        MakeFragment(database);
+        MakeFragment(themeShow, textShow, fragmentId);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {return;}
+        fragmentId += 1;
+        Log.v(TAG,"ON_ACTIVITY_RESULT");
+        String themeShowResult = data.getStringExtra("theme");
+        Log.v(TAG,themeShowResult);
+        String textShowResult = data.getStringExtra("text");
+        Log.v(TAG,textShowResult);
+        int fragmentIdResult = fragmentId;
+        Log.v(TAG,Integer.toString(fragmentIdResult));
+        MakeFragment(themeShowResult, textShowResult, fragmentIdResult);
     }
 
     @Override
@@ -35,36 +53,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
         Intent intObj = new Intent(this, AddNoteActivity.class);
-        startActivity(intObj);
+        startActivityForResult(intObj, 0);
         return true;
     }
 
-    public void MakeFragment(SQLiteDatabase data) {
+    public void MakeFragment(String theme, String text, int id) {
+        Log.v(TAG, "MakeFragment opening");
+        Log.v(TAG, theme);
+        Log.v(TAG, text);
+        Log.v(TAG, Integer.toString(id));
         final Note fragmentInput = new Note();
-        Cursor cursor = data.query(FeedReaderContract.FeedEntry.TABLE_NAME, null, null, null, null, null, null);
-        if (cursor.moveToFirst()) {
-            int idIndex = cursor.getColumnIndex(FeedReaderContract.FeedEntry.COLUMN_ID);
-            int themeIndex = cursor.getColumnIndex(FeedReaderContract.FeedEntry.COLUMN_NAME_THEME);
-            int textIndex = cursor.getColumnIndex(FeedReaderContract.FeedEntry.COLUMN_NAME_TEXT);
-            Bundle bundle = new Bundle();
-            bundle.putInt("id", cursor.getInt(idIndex));
-            bundle.putString("theme", cursor.getString(themeIndex));
-            bundle.putString("text", cursor.getString(textIndex));
-            fragmentInput.setArguments(bundle);
-
-            do {
-                Log.d("mLog", "ID = " + cursor.getInt(idIndex) +
-                        ", name = " + cursor.getString(themeIndex) +
-                        ", email = " + cursor.getString(textIndex));
-            } while (cursor.moveToNext());
-            if (cursor.getInt(idIndex) % 2 == 0) {
-                manager.beginTransaction().add(R.id.grid_view_a, fragmentInput).commit();
-            } else {
-                manager.beginTransaction().add(R.id.grid_view_b, fragmentInput).commit();
-            }
-
-        } else
-            Log.d("mLog", "0 rows");
-        cursor.close();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
+        bundle.putString("theme", theme);
+        bundle.putString("text", text);
+        fragmentInput.setArguments(bundle);
+        if (id%2==0){
+            manager.beginTransaction().add(R.id.grid_view_a, fragmentInput).commitAllowingStateLoss();
+        }
+        else{
+            manager.beginTransaction().add(R.id.grid_view_b, fragmentInput).commitAllowingStateLoss();
+        }
     }
 }
