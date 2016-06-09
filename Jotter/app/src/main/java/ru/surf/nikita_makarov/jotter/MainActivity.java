@@ -1,15 +1,20 @@
 package ru.surf.nikita_makarov.jotter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    public int fragmentId, fragmentColor;
+    public int fragmentId, fragmentColor, height;
     public FragmentManager manager = getSupportFragmentManager();
     public String TAG = "MainActivity";
 
@@ -17,11 +22,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle onSaveInstanceState) {
         fragmentId = 0;
         fragmentColor = -14575885;
-        String themeShow = "Start";
-        String textShow = "using Jotter now!";
         super.onCreate(onSaveInstanceState);
         setContentView(R.layout.activity_main);
-        MakeFragment(themeShow, textShow, fragmentColor, fragmentId);
     }
 
     @Override
@@ -45,7 +47,14 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, Integer.toString(fragmentColorResult));
         int fragmentIdResult = fragmentId;
         Log.v(TAG, Integer.toString(fragmentIdResult));
-        MakeFragment(themeShowResult, textShowResult, fragmentColorResult, fragmentIdResult);
+        MakeFragment(themeShowResult, textShowResult,
+                fragmentColorResult, fragmentIdResult);
+        Context context = getApplicationContext();
+        CharSequence text = "Brand new note added!";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.setGravity(Gravity.BOTTOM, 0, 45);
+        toast.show();
     }
 
     @Override
@@ -68,12 +77,15 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, text);
         Log.v(TAG, Integer.toString(id));
         Log.v(TAG, Integer.toString(color));
+        ScrollView scroll = (ScrollView) findViewById(R.id.scroll);
+        height = scroll.getWidth() / 2 + 4;
         final Note fragmentInput = new Note();
         Bundle bundle = new Bundle();
         bundle.putInt("id", id);
         bundle.putString("theme", theme);
         bundle.putString("text", text);
         bundle.putInt("color", color);
+        bundle.putInt("height", height);
         fragmentInput.setArguments(bundle);
         if (id % 2 == 0) {
             manager.beginTransaction().add(R.id.grid_view_a, fragmentInput).commitAllowingStateLoss();

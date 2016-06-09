@@ -2,30 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/note"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
-    android:layout_margin="5dp"
-    android:background="@color/colorAccent"
-    android:columnCount="1"
+    android:layout_height="0dp"
     android:orientation="vertical"
-    android:rowCount="1">
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="1dp"
+    android:layout_marginRight="1dp">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_weight="0.5"
+        android:layout_weight="0.35"
         android:layout_height="match_parent"
         android:id="@+id/text"
+        android:layout_margin="1dp"
         android:textColor="@color/white"
         android:textAlignment="center"
-        android:textSize="40sp"/>
+        android:textSize="27sp"/>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_weight="0.5"
+        android:layout_weight="0.65"
         android:layout_height="match_parent"
         android:textColor="@color/white"
         android:textAlignment="center"
         android:id="@+id/text2"
-        android:textSize="23sp"/>
+        android:layout_margin="1dp"
+        android:textSize="18sp"/>
 
 </LinearLayout>
 
