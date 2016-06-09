@@ -1,20 +1,25 @@
 package ru.surf.nikita_makarov.jotter;
 
+import android.content.Intent;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class Note extends Fragment {
+public class Note extends Fragment{
 
     public LinearLayout button;
     public TextView txt, txt2;
     public int fragmentId = 0, fragmentColor = 0, fragmentHeight = 0;
     public String fragmentText, fragmentTheme;
+    public Button btn;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -34,6 +39,14 @@ public class Note extends Fragment {
         button = (LinearLayout) view.findViewById(R.id.note);
         txt = (TextView) view.findViewById(R.id.text);
         txt2 = (TextView) view.findViewById(R.id.text2);
+        btn = (Button) view.findViewById(R.id.btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowInfo(v);
+            }
+        });
+
         GridLayout.LayoutParams params = (GridLayout.LayoutParams) button.getLayoutParams();
         params.height = fragmentHeight;
         button.setLayoutParams(params);
@@ -45,6 +58,17 @@ public class Note extends Fragment {
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    public void ShowInfo(View v) {
+                Intent noteInfo= new Intent(v.getContext(), NoteInfoActivity.class);
+                noteInfo.putExtra("id", fragmentId);
+                noteInfo.putExtra("theme", fragmentTheme);
+                Log.v("So", fragmentTheme);
+                noteInfo.putExtra("text", fragmentText);
+                Log.v("So", fragmentText);
+                noteInfo.putExtra("color", fragmentColor);
+                startActivity(noteInfo);
     }
 
     public void updateTextView()

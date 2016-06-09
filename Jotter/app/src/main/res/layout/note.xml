@@ -3,31 +3,39 @@
     android:id="@+id/note"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:orientation="vertical"
-    android:layout_marginTop="2dp"
     android:layout_marginBottom="2dp"
     android:layout_marginLeft="1dp"
-    android:layout_marginRight="1dp">
+    android:layout_marginRight="1dp"
+    android:layout_marginTop="2dp"
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_weight="0.35"
-        android:layout_height="match_parent"
         android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="1dp"
-        android:textColor="@color/white"
+        android:layout_weight="0.30"
         android:textAlignment="center"
-        android:textSize="27sp"/>
+        android:textColor="@color/white"
+        android:textSize="27sp" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_weight="0.65"
-        android:layout_height="match_parent"
-        android:textColor="@color/white"
-        android:textAlignment="center"
         android:id="@+id/text2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="1dp"
-        android:textSize="18sp"/>
+        android:layout_weight="0.45"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="2dp"
+        android:layout_weight="0.25"
+        android:background="@drawable/max" />
 
 </LinearLayout>
 
