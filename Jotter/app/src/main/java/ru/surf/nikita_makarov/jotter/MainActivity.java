@@ -89,9 +89,9 @@ public class MainActivity extends AppCompatActivity {
         bundle.putString("date", date);
         fragmentInput.setArguments(bundle);
         if (id % 2 == 0) {
-            manager.beginTransaction().add(R.id.grid_view_a, fragmentInput).commitAllowingStateLoss();
-        } else {
             manager.beginTransaction().add(R.id.grid_view_b, fragmentInput).commitAllowingStateLoss();
+        } else {
+            manager.beginTransaction().add(R.id.grid_view_a, fragmentInput).commitAllowingStateLoss();
         }
     }
 }

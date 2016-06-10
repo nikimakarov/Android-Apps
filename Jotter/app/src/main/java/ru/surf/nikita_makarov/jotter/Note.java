@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,7 +19,7 @@ public class Note extends Fragment{
     public TextView txt, txt2;
     public int fragmentId = 0, fragmentColor = 0, fragmentHeight = 0;
     public String fragmentText, fragmentTheme, fragmentDate;
-    public Button btn;
+    public ImageView btn;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -39,8 +40,8 @@ public class Note extends Fragment{
         button = (LinearLayout) view.findViewById(R.id.note);
         txt = (TextView) view.findViewById(R.id.text);
         txt2 = (TextView) view.findViewById(R.id.text2);
-        btn = (Button) view.findViewById(R.id.btn);
-        btn.setOnClickListener(new View.OnClickListener() {
+        btn = (ImageView) view.findViewById(R.id.btn);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShowInfo();
@@ -76,8 +77,7 @@ public class Note extends Fragment{
                 .commit();
     }
 
-    public void updateTextView()
-    {
+    public void updateTextView() {
         String shortTheme = cropString(fragmentTheme,22);
         String shortText =  cropString(fragmentText,30);
         this.txt.setText(shortTheme);

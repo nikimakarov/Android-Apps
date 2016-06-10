@@ -38,6 +38,8 @@ public class AddNoteActivity extends AppCompatActivity {
         data2 = (EditText) findViewById(R.id.editText2);
         colorShow = (ImageView) findViewById(R.id.color_show);
         button = (Button) findViewById(R.id.button);
+        colorAdd = ContextCompat.getColor(this, R.color.blue);
+        colorShow.setBackgroundColor(colorAdd);
         initListeners();
     }
 
@@ -48,7 +50,6 @@ public class AddNoteActivity extends AppCompatActivity {
         data1 = (EditText) findViewById(R.id.editText);
         data2 = (EditText) findViewById(R.id.editText2);
         button = (Button) findViewById(R.id.button);
-        colorAdd = 0;
         initListeners();
     }
 
@@ -74,7 +75,7 @@ public class AddNoteActivity extends AppCompatActivity {
                 }
                 else {
                     Context context = getApplicationContext();
-                    CharSequence text = "Fill all fields and set the color!";
+                    CharSequence text = "Fill all fields!";
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.setGravity(Gravity.BOTTOM, 0, 45);
