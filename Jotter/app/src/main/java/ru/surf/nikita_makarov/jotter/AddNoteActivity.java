@@ -2,13 +2,9 @@ package ru.surf.nikita_makarov.jotter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.ExpandedMenuView;
-import android.text.method.CharacterPickerDialog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -18,6 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class AddNoteActivity extends AppCompatActivity {
     public String TAG = "AddNoteActivity";
@@ -62,7 +61,11 @@ public class AddNoteActivity extends AppCompatActivity {
                     Log.v(TAG, themeAdd);
                     Log.v(TAG, textAdd);
                     Log.v(TAG, Integer.toString(colorAdd));
+                    long date = System.currentTimeMillis();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd. MM. yyyy h:mm a", Locale.getDefault());
+                    String dateAdd = sdf.format(date);
                     Intent intent = new Intent(v.getContext(), MainActivity.class);
+                    intent.putExtra("date", dateAdd);
                     intent.putExtra("theme", themeAdd);
                     intent.putExtra("text", textAdd);
                     intent.putExtra("color", colorAdd);

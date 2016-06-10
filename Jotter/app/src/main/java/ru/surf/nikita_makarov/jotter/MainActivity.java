@@ -46,8 +46,9 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, Integer.toString(fragmentColorResult));
         int fragmentIdResult = fragmentId;
         Log.v(TAG, Integer.toString(fragmentIdResult));
+        String dateShowResult  = data.getStringExtra("date");
         MakeFragment(themeShowResult, textShowResult,
-                fragmentColorResult, fragmentIdResult);
+                fragmentColorResult, fragmentIdResult, dateShowResult);
         Context context = getApplicationContext();
         CharSequence text = "Brand new note added!";
         int duration = Toast.LENGTH_SHORT;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void MakeFragment(String theme, String text, int color, int id) {
+    public void MakeFragment(String theme, String text, int color, int id, String date) {
         Log.v(TAG, "MakeFragment opening");
         Log.v(TAG, theme);
         Log.v(TAG, text);
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         bundle.putString("text", text);
         bundle.putInt("color", color);
         bundle.putInt("height", height);
+        bundle.putString("date", date);
         fragmentInput.setArguments(bundle);
         if (id % 2 == 0) {
             manager.beginTransaction().add(R.id.grid_view_a, fragmentInput).commitAllowingStateLoss();

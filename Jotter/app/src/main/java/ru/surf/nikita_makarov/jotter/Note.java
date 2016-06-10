@@ -1,10 +1,9 @@
 package ru.surf.nikita_makarov.jotter;
 
-import android.content.Intent;
-import android.hardware.Camera;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ public class Note extends Fragment{
     public LinearLayout button;
     public TextView txt, txt2;
     public int fragmentId = 0, fragmentColor = 0, fragmentHeight = 0;
-    public String fragmentText, fragmentTheme;
+    public String fragmentText, fragmentTheme, fragmentDate;
     public Button btn;
 
     @Override
@@ -31,6 +30,7 @@ public class Note extends Fragment{
         fragmentText = bundle.getString("text");
         fragmentColor = bundle.getInt("color");
         fragmentHeight = bundle.getInt("height", 184);
+        fragmentDate = bundle.getString("date");
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Note extends Fragment{
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShowInfo(v);
+                ShowInfo();
             }
         });
 
@@ -60,15 +60,20 @@ public class Note extends Fragment{
         super.onActivityCreated(savedInstanceState);
     }
 
-    public void ShowInfo(View v) {
-                Intent noteInfo= new Intent(v.getContext(), NoteInfoActivity.class);
-                noteInfo.putExtra("id", fragmentId);
-                noteInfo.putExtra("theme", fragmentTheme);
-                Log.v("So", fragmentTheme);
-                noteInfo.putExtra("text", fragmentText);
-                Log.v("So", fragmentText);
-                noteInfo.putExtra("color", fragmentColor);
-                startActivity(noteInfo);
+    public void ShowInfo() {
+        NoteInfo noteInfo = NoteInfo.newInstance(fragmentId, fragmentTheme, fragmentText, fragmentColor, fragmentDate);
+        // the transition is only available in API 21+.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            noteInfo.setSharedElementEnterTransition(new DetailsTransition());
+            noteInfo.setEnterTransition(new Fade());
+            setExitTransition(new Fade());
+            noteInfo.setSharedElementReturnTransition(new DetailsTransition());
+        }
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.linear_main, noteInfo)
+                .addToBackStack(null)
+                .commit();
     }
 
     public void updateTextView()
