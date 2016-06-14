@@ -7,13 +7,12 @@ import android.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class Note extends Fragment{
+public class Note extends Fragment {
 
     public LinearLayout button;
     public TextView txt, txt2;
@@ -30,13 +29,13 @@ public class Note extends Fragment{
         fragmentTheme = bundle.getString("theme");
         fragmentText = bundle.getString("text");
         fragmentColor = bundle.getInt("color");
-        fragmentHeight = bundle.getInt("height", 184);
+        fragmentHeight = bundle.getInt("height");
         fragmentDate = bundle.getString("date");
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.note, container, false);
+        View view = inflater.inflate(R.layout.note, container, false);
         button = (LinearLayout) view.findViewById(R.id.note);
         txt = (TextView) view.findViewById(R.id.text);
         txt2 = (TextView) view.findViewById(R.id.text2);
@@ -63,7 +62,7 @@ public class Note extends Fragment{
 
     public void ShowInfo() {
         NoteInfo noteInfo = NoteInfo.newInstance(fragmentId, fragmentTheme, fragmentText, fragmentColor, fragmentDate);
-        // the transition is only available in API 21+.
+        //The transition is only available in API 21+.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             noteInfo.setSharedElementEnterTransition(new DetailsTransition());
             noteInfo.setEnterTransition(new Fade());
@@ -78,16 +77,15 @@ public class Note extends Fragment{
     }
 
     public void updateTextView() {
-        String shortTheme = cropString(fragmentTheme,22);
-        String shortText =  cropString(fragmentText,30);
+        String shortTheme = cropString(fragmentTheme, 22);
+        String shortText = cropString(fragmentText, 30);
         this.txt.setText(shortTheme);
         this.txt2.setText(shortText);
     }
 
-    public String cropString(String crop, int maxCropLength)
-    {
-        if (crop.length()>maxCropLength)
-            return crop.substring(0,crop.substring(0,maxCropLength).lastIndexOf(" "))+ "...";
+    public String cropString(String crop, int maxCropLength) {
+        if (crop.length() > maxCropLength)
+            return crop.substring(0, crop.substring(0, maxCropLength).lastIndexOf(" ")) + "...";
         else
             return crop;
     }

@@ -31,7 +31,7 @@ public class BorderedTextView extends TextView {
         init();
     }
 
-    private void init(){
+    private void init() {
         borders = new Border[4];
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.BLACK);
@@ -41,22 +41,19 @@ public class BorderedTextView extends TextView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if(borders == null) return;
+        if (borders == null) return;
 
-        for(Border border : borders){
+        for (Border border : borders) {
             paint.setColor(border.getColor());
             paint.setStrokeWidth(border.getWidth());
 
-            if(border.getStyle() == BORDER_TOP){
+            if (border.getStyle() == BORDER_TOP) {
                 canvas.drawLine(0, 0, getWidth(), 0, paint);
-            } else
-            if(border.getStyle() == BORDER_RIGHT){
+            } else if (border.getStyle() == BORDER_RIGHT) {
                 canvas.drawLine(getWidth(), 0, getWidth(), getHeight(), paint);
-            } else
-            if(border.getStyle() == BORDER_BOTTOM){
+            } else if (border.getStyle() == BORDER_BOTTOM) {
                 canvas.drawLine(0, getHeight(), getWidth(), getHeight(), paint);
-            } else
-            if(border.getStyle() == BORDER_LEFT){
+            } else if (border.getStyle() == BORDER_LEFT) {
                 canvas.drawLine(0, 0, 0, getHeight(), paint);
             }
         }
@@ -67,7 +64,7 @@ public class BorderedTextView extends TextView {
     }
 
     public void setBorders(int Color, int Width) {
-        for (int side=0; side<4; side++) {
+        for (int side = 0; side < 4; side++) {
             this.borders[side] = new Border();
             this.borders[side].setStyle(side);
             this.borders[side].setColor(Color);

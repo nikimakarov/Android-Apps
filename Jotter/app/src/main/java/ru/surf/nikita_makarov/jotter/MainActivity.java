@@ -5,31 +5,47 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
-    public int fragmentId, fragmentColor, height;
+    public FeedReaderContract.FeedReaderDBHelper dbHelper;
+    public int fragmentId, fragmentColor, height, menuType = 0;
     public FragmentManager manager = getSupportFragmentManager();
     public String TAG = "MainActivity";
+    public boolean Opening = true;
 
     @Override
     protected void onCreate(Bundle onSaveInstanceState) {
-        fragmentId = 0;
         fragmentColor = -14575885;
         super.onCreate(onSaveInstanceState);
         setContentView(R.layout.activity_main);
     }
 
     @Override
+    protected void onStart(){
+        super.onStart();
+        if (Opening) {
+            dbHelper = new FeedReaderContract.FeedReaderDBHelper(this);
+            List<NoteStruct> savedNotes = dbHelper.getAllNotes();
+            fragmentId = savedNotes.size();
+            for (NoteStruct savedNote : savedNotes) {
+                MakeFragment(savedNote.theme, savedNote.text, savedNote.color, savedNote.id, savedNote.date);
+            }
+            Opening = false;
+        }
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -42,11 +58,14 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, themeShowResult);
         String textShowResult = data.getStringExtra("text");
         Log.v(TAG, textShowResult);
-        int fragmentColorResult = data.getIntExtra("color",0);
+        int fragmentColorResult = data.getIntExtra("color", 0);
         Log.v(TAG, Integer.toString(fragmentColorResult));
         int fragmentIdResult = fragmentId;
         Log.v(TAG, Integer.toString(fragmentIdResult));
-        String dateShowResult  = data.getStringExtra("date");
+        String dateShowResult = data.getStringExtra("date");
+        Log.v(TAG, dateShowResult);
+        dbHelper.pushNote(fragmentIdResult, themeShowResult, textShowResult,
+                dateShowResult, fragmentColorResult);
         MakeFragment(themeShowResult, textShowResult,
                 fragmentColorResult, fragmentIdResult, dateShowResult);
         Context context = getApplicationContext();
@@ -66,8 +85,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
-        Intent intObj = new Intent(this, AddNoteActivity.class);
-        startActivityForResult(intObj, 0);
+        if (item.getItemId()== R.id.add_button) {
+            Intent intObj = new Intent(this, AddNoteActivity.class);
+            startActivityForResult(intObj, 0);
+        }
+        if (item.getItemId()==R.id.delete_button) {
+            //dbHelper.deleteNote(idIn);
+            Intent gotoMainScreen = new Intent(this, MainActivity.class);
+            CharSequence text = "Note has been deleted.";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(this, text, duration);
+            toast.setGravity(Gravity.BOTTOM, 0, 45);
+            startActivity(gotoMainScreen);
+            toast.show();
+        }
         return true;
     }
 
@@ -77,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, text);
         Log.v(TAG, Integer.toString(id));
         Log.v(TAG, Integer.toString(color));
-        ScrollView scroll = (ScrollView) findViewById(R.id.scroll);
-        height = scroll.getWidth() / 2 + 4;
+        DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
+        height = displaymetrics.widthPixels / 2 + 4;
         final Note fragmentInput = new Note();
         Bundle bundle = new Bundle();
         bundle.putInt("id", id);

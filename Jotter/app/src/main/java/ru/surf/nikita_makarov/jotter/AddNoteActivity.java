@@ -31,7 +31,7 @@ public class AddNoteActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG,"on Create");
+        Log.v(TAG, "on Create");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
         data1 = (EditText) findViewById(R.id.editText);
@@ -45,8 +45,10 @@ public class AddNoteActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.v(TAG,"on ActivityCreate");
-        if (data == null) {return;}
+        Log.v(TAG, "on ActivityCreate");
+        if (data == null) {
+            return;
+        }
         data1 = (EditText) findViewById(R.id.editText);
         data2 = (EditText) findViewById(R.id.editText2);
         button = (Button) findViewById(R.id.button);
@@ -56,7 +58,7 @@ public class AddNoteActivity extends AppCompatActivity {
     private void initListeners() {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (data1.getText().length() != 0 & data2.getText().length() != 0 & colorAdd!=0){
+                if (data1.getText().length() != 0 & data2.getText().length() != 0 & colorAdd != 0) {
                     themeAdd = data1.getText().toString();
                     textAdd = data2.getText().toString();
                     Log.v(TAG, themeAdd);
@@ -72,8 +74,7 @@ public class AddNoteActivity extends AppCompatActivity {
                     intent.putExtra("color", colorAdd);
                     setResult(RESULT_CODE, intent);
                     finish();
-                }
-                else {
+                } else {
                     Context context = getApplicationContext();
                     CharSequence text = "Fill all fields!";
                     int duration = Toast.LENGTH_SHORT;
@@ -94,7 +95,7 @@ public class AddNoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.yellow:
                 colorAdd = ContextCompat.getColor(this, R.color.yellow);
                 break;
@@ -120,9 +121,6 @@ public class AddNoteActivity extends AppCompatActivity {
         colorShow.setBackgroundColor(colorAdd);
         return true;
     }
-
-
-
 
 
 }

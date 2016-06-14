@@ -1,12 +1,19 @@
 package ru.surf.nikita_makarov.jotter;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class NoteInfo extends Fragment {
 
@@ -15,14 +22,15 @@ public class NoteInfo extends Fragment {
     public int idIn, colorIn;
     public String themeIn, textIn, dateIn;
     public View sep1, sep2;
+    public FeedReaderContract.FeedReaderDBHelper dbHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    public static NoteInfo newInstance (int fragmentId, String fragmentTheme,
-                                        String fragmentText, int fragmentColor, String fragmentDate) {
+    public static NoteInfo newInstance(int fragmentId, String fragmentTheme,
+                                       String fragmentText, int fragmentColor, String fragmentDate) {
         Bundle args = new Bundle();
         args.putInt("id", fragmentId);
         args.putString("date", fragmentDate);
@@ -60,13 +68,36 @@ public class NoteInfo extends Fragment {
         sep1.setBackgroundColor(colorIn);
         sep2.setBackgroundColor(colorIn);
         getText.setBackgroundColor(colorIn);
-        getText.setBorders(colorIn-30000, 10);
+        getText.setBorders(colorIn - 30000, 10);
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(colorIn));
     }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.delete, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, 1, 0, "Delete").setIcon(R.drawable.minus)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        if (item.getTitle()=="Delete") {
+            dbHelper = new FeedReaderContract.FeedReaderDBHelper(getContext());
+            dbHelper.deleteNote(idIn);
+            Intent gotoMainScreen = new Intent(getContext(), MainActivity.class);
+            CharSequence text = "Note has been deleted.";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(getContext(), text, duration);
+            toast.setGravity(Gravity.BOTTOM, 0, 45);
+            startActivity(gotoMainScreen);
+            toast.show();
+        }
+        return true;
+    }
+
 }

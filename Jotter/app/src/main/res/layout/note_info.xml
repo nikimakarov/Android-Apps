@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerVertical="true"
-    android:layout_centerHorizontal="true">
+    android:layout_centerHorizontal="true"
+    android:fitsSystemWindows="true">
 
     <TextView
     android:layout_width="match_parent"
@@ -27,6 +29,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginTop="10dp"
         android:gravity="center"/>
+
     <ScrollView
         android:id="@+id/scroller"
         android:layout_width="match_parent"
@@ -36,16 +39,16 @@
         android:layout_marginRight="25dp"
         android:layout_below="@+id/separator1"
         android:scrollbars="none">
+        <ru.surf.nikita_makarov.jotter.BorderedTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:text="Medium Text"
+            android:id="@+id/text_main"
+            android:padding="12dp" />
+    </ScrollView>
 
-    <ru.surf.nikita_makarov.jotter.BorderedTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        android:text="Medium Text"
-        android:id="@+id/text_main"
-        android:padding="12dp" />
-</ScrollView>
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
@@ -68,6 +71,4 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/separator2" />
-
-
 </RelativeLayout>

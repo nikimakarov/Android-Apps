@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/yellow"
-        android:orderInCategory="4"
-        app:showAsAction="always"
+        android:orderInCategory="5"
+        app:showAsAction="ifRoom"
         android:title="@string/yellow"
         android:icon="@drawable/yellow">
     </item>
     <item xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/red"
-        android:orderInCategory="3"
-        app:showAsAction="always"
+        android:orderInCategory="6"
+        app:showAsAction="ifRoom"
         android:title="@string/red"
         android:icon="@drawable/red">
     </item>
@@ -30,15 +30,15 @@
     </item>
     <item xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/violet"
-        android:orderInCategory="5"
-        app:showAsAction="ifRoom"
+        android:orderInCategory="4"
+        app:showAsAction="always"
         android:title="@string/violet"
         android:icon="@drawable/violet">
     </item>
     <item xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pink"
-        android:orderInCategory="6"
-        app:showAsAction="ifRoom"
+        android:orderInCategory="3"
+        app:showAsAction="always"
         android:title="@string/pink"
         android:icon="@drawable/pink">
     </item>
