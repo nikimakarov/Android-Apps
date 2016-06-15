@@ -8,11 +8,4 @@
     android:title="@string/add"
     android:icon="@drawable/plus">
 </item>
-<item
-    android:id="@+id/delete_button"
-    android:orderInCategory="11"
-    app:showAsAction="ifRoom|withText"
-    android:title="@string/delete"
-    android:icon="@drawable/minus">
-</item>
 </menu>

@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll2"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_margin="3dip"
+    android:scrollbars="none">
+
+<RelativeLayout
     android:id="@+id/fragment"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_centerVertical="true"
-    android:layout_centerHorizontal="true"
+    android:layout_height="wrap_content"
     android:fitsSystemWindows="true">
 
     <TextView
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="wrap_content"
     android:textSize="27sp"
-    android:textStyle="bold"
     android:textColor="@color/black"
     android:text="Large Text"
     android:id="@+id/text_theme"
@@ -35,8 +40,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="12dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="25dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
         android:layout_below="@+id/separator1"
         android:scrollbars="none">
         <ru.surf.nikita_makarov.jotter.BorderedTextView
@@ -72,3 +77,4 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/separator2" />
 </RelativeLayout>
+</ScrollView>

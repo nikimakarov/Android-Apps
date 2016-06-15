@@ -6,7 +6,6 @@
         android:orderInCategory="11"
         app:showAsAction="ifRoom|withText"
         android:title="@string/delete"
-        android:icon="@drawable/minus"
-        android:visible="false">
+        android:icon="@drawable/minus">
     </item>
 </menu>

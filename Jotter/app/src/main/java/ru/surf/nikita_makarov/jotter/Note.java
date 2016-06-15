@@ -18,6 +18,7 @@ public class Note extends Fragment {
     public TextView txt, txt2;
     public int fragmentId = 0, fragmentColor = 0, fragmentHeight = 0;
     public String fragmentText, fragmentTheme, fragmentDate;
+    public final String fragmentTag = "fragmentInfo";
     public ImageView btn;
 
     @Override
@@ -71,7 +72,7 @@ public class Note extends Fragment {
         }
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.linear_main, noteInfo)
+                .replace(R.id.linear_main, noteInfo, fragmentTag)
                 .addToBackStack(null)
                 .commit();
     }

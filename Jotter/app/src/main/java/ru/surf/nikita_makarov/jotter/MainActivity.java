@@ -3,6 +3,7 @@ package ru.surf.nikita_makarov.jotter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -14,9 +15,9 @@ import android.widget.Toast;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  implements RemovalConfirmation.RemovalConfirmationListener{
     public FeedReaderContract.FeedReaderDBHelper dbHelper;
-    public int fragmentId, fragmentColor, height, menuType = 0;
+    public int fragmentId, fragmentColor, height;
     public FragmentManager manager = getSupportFragmentManager();
     public String TAG = "MainActivity";
     public boolean Opening = true;
@@ -29,18 +30,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         if (Opening) {
             dbHelper = new FeedReaderContract.FeedReaderDBHelper(this);
             List<NoteStruct> savedNotes = dbHelper.getAllNotes();
-            fragmentId = savedNotes.size();
             for (NoteStruct savedNote : savedNotes) {
+                fragmentId = savedNote.id;
                 MakeFragment(savedNote.theme, savedNote.text, savedNote.color, savedNote.id, savedNote.date);
             }
-            Opening = false;
+        Opening = false;
         }
     }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -85,22 +87,39 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
-        if (item.getItemId()== R.id.add_button) {
+        if (item.getItemId()== R.id.add_button){
             Intent intObj = new Intent(this, AddNoteActivity.class);
             startActivityForResult(intObj, 0);
         }
-        if (item.getItemId()==R.id.delete_button) {
-            //dbHelper.deleteNote(idIn);
-            Intent gotoMainScreen = new Intent(this, MainActivity.class);
-            CharSequence text = "Note has been deleted.";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(this, text, duration);
-            toast.setGravity(Gravity.BOTTOM, 0, 45);
-            startActivity(gotoMainScreen);
-            toast.show();
+        if (item.getItemId()== R.id.delete_button) {
+            DialogFragment dialog = new RemovalConfirmation();
+            dialog.show(getSupportFragmentManager(), "RemovalConfirmation");
         }
         return true;
     }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        NoteInfo fragment = (NoteInfo) getSupportFragmentManager().findFragmentByTag("fragmentInfo");
+        dbHelper.deleteNote(fragment.idIn);
+        Intent gotoMainScreen = new Intent(this, MainActivity.class);
+        CharSequence text = "Note has been deleted.";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(this, text, duration);
+        toast.setGravity(Gravity.BOTTOM, 0, 45);
+        startActivity(gotoMainScreen);
+        toast.show();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        CharSequence text = "Refusal. Note still exists.";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(this, text, duration);
+        toast.setGravity(Gravity.BOTTOM, 0, 45);
+        toast.show();
+    }
+
 
     public void MakeFragment(String theme, String text, int color, int id, String date) {
         Log.v(TAG, "MakeFragment opening");
