@@ -1,5 +1,7 @@
 package ru.surf.nikita_makarov.jotter;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,8 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class  NoteInfo extends Fragment{
+import java.util.List;
 
+public class  NoteInfo extends Fragment{
     public TextView getDate, getTheme;
     public BorderedTextView getText;
     public int idIn, colorIn;
