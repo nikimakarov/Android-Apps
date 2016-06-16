@@ -4,27 +4,39 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class NoteInfo extends Fragment{
+public class  NoteInfo extends Fragment{
 
     public TextView getDate, getTheme;
     public BorderedTextView getText;
     public int idIn, colorIn;
     public String themeIn, textIn, dateIn;
     public View sep1, sep2;
-    public ScrollView scroll;
-
+    public String LOG_TAG = "NoteInfo";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(LOG_TAG, "Fragment1 onCreate");
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        Log.d(LOG_TAG, "Fragment1 onStop");
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .show(getActivity().getSupportFragmentManager().findFragmentByTag("Main"))
+                .addToBackStack(null)
+                .commit();
     }
 
     public static NoteInfo newInstance(int fragmentId, String fragmentTheme,
@@ -40,9 +52,9 @@ public class NoteInfo extends Fragment{
         return fragment;
     }
 
-
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "Fragment1 onCreateView");
         View view = inflater.inflate(R.layout.note_info, container, false);
         getDate = (TextView) view.findViewById(R.id.date);
         getTheme = (TextView) view.findViewById(R.id.text_theme);
@@ -57,7 +69,6 @@ public class NoteInfo extends Fragment{
         colorIn = getArguments().getInt("color", 0);
         dateIn = getArguments().getString("date");
         themeIn = "Theme: " + themeIn;
-        textIn = textIn;
         dateIn = "Note date: " + dateIn;
         getTheme.setText(themeIn);
         getText.setText(textIn);
@@ -83,5 +94,4 @@ public class NoteInfo extends Fragment{
         inflater.inflate(R.menu.delete, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
 }

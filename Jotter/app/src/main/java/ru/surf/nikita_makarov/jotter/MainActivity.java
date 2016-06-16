@@ -1,10 +1,15 @@
 package ru.surf.nikita_makarov.jotter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -17,7 +22,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity  implements RemovalConfirmation.RemovalConfirmationListener{
     public FeedReaderContract.FeedReaderDBHelper dbHelper;
-    public int fragmentId, fragmentColor, height;
+    public int fragmentId, fragmentColor, height, orientation = 0;
     public FragmentManager manager = getSupportFragmentManager();
     public String TAG = "MainActivity";
     public boolean Opening = true;
@@ -25,13 +30,19 @@ public class MainActivity extends AppCompatActivity  implements RemovalConfirmat
     @Override
     protected void onCreate(Bundle onSaveInstanceState) {
         fragmentColor = -14575885;
+        Log.v("Main","onCreate");
         super.onCreate(onSaveInstanceState);
         setContentView(R.layout.activity_main);
+        orientation = getScreenOrientation();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, new MainFragment(), "Main")
+                .commit();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "MainActivity: onResume()");
         if (Opening) {
             dbHelper = new FeedReaderContract.FeedReaderDBHelper(this);
             List<NoteStruct> savedNotes = dbHelper.getAllNotes();
@@ -42,7 +53,6 @@ public class MainActivity extends AppCompatActivity  implements RemovalConfirmat
         Opening = false;
         }
     }
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -55,17 +65,17 @@ public class MainActivity extends AppCompatActivity  implements RemovalConfirmat
             return;
         }
         fragmentId += 1;
-        Log.v(TAG, "ON_ACTIVITY_RESULT");
+        //Log.v(TAG, "ON_ACTIVITY_RESULT");
         String themeShowResult = data.getStringExtra("theme");
         Log.v(TAG, themeShowResult);
         String textShowResult = data.getStringExtra("text");
-        Log.v(TAG, textShowResult);
+        //Log.v(TAG, textShowResult);
         int fragmentColorResult = data.getIntExtra("color", 0);
-        Log.v(TAG, Integer.toString(fragmentColorResult));
+        //Log.v(TAG, Integer.toString(fragmentColorResult));
         int fragmentIdResult = fragmentId;
-        Log.v(TAG, Integer.toString(fragmentIdResult));
+        //Log.v(TAG, Integer.toString(fragmentIdResult));
         String dateShowResult = data.getStringExtra("date");
-        Log.v(TAG, dateShowResult);
+        //Log.v(TAG, dateShowResult);
         dbHelper.pushNote(fragmentIdResult, themeShowResult, textShowResult,
                 dateShowResult, fragmentColorResult);
         MakeFragment(themeShowResult, textShowResult,
@@ -102,12 +112,25 @@ public class MainActivity extends AppCompatActivity  implements RemovalConfirmat
     public void onDialogPositiveClick(DialogFragment dialog) {
         NoteInfo fragment = (NoteInfo) getSupportFragmentManager().findFragmentByTag("fragmentInfo");
         dbHelper.deleteNote(fragment.idIn);
-        Intent gotoMainScreen = new Intent(this, MainActivity.class);
+        //Intent gotoMainScreen = new Intent(this, MainActivity.class);
         CharSequence text = "Note has been deleted.";
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(this, text, duration);
         toast.setGravity(Gravity.BOTTOM, 0, 45);
-        startActivity(gotoMainScreen);
+        clearStack();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .remove(fragment)
+                .commit();
+        getSupportFragmentManager()
+                .beginTransaction().detach(fragment).attach(fragment).commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .show(getSupportFragmentManager()
+                        .findFragmentByTag("Main"))
+                .addToBackStack(null)
+                .commit();
+        //startActivity(gotoMainScreen);
         toast.show();
     }
 
@@ -122,11 +145,11 @@ public class MainActivity extends AppCompatActivity  implements RemovalConfirmat
 
 
     public void MakeFragment(String theme, String text, int color, int id, String date) {
-        Log.v(TAG, "MakeFragment opening");
+        //Log.v(TAG, "MakeFragment opening");
         Log.v(TAG, theme);
-        Log.v(TAG, text);
-        Log.v(TAG, Integer.toString(id));
-        Log.v(TAG, Integer.toString(color));
+        //Log.v(TAG, text);
+        //Log.v(TAG, Integer.toString(id));
+        //Log.v(TAG, Integer.toString(color));
         DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
         height = displaymetrics.widthPixels / 2 + 4;
         final Note fragmentInput = new Note();
@@ -144,4 +167,43 @@ public class MainActivity extends AppCompatActivity  implements RemovalConfirmat
             manager.beginTransaction().add(R.id.grid_view_a, fragmentInput).commitAllowingStateLoss();
         }
     }
+
+
+    public int getScreenOrientation() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            return 1; // Portrait Mode
+        }
+        else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return 2;   // Landscape mode
+        }
+        return 0;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().findFragmentByTag("fragmentInfo")==null)
+        new AlertDialog.Builder(this)
+                .setTitle("Really Exit?")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        finish();
+                        System.exit(0);
+                    }
+                }).create().show();
+        else{
+            MainActivity.super.onBackPressed();
+        }
+    }
+
+    private void clearStack(){
+        int count = manager.getBackStackEntryCount();
+        while(count > 0){
+            manager.popBackStack();
+            count--;
+        }
+    }
+
 }
