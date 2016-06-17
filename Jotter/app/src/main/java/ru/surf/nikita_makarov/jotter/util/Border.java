@@ -1,4 +1,4 @@
-package ru.surf.nikita_makarov.jotter;
+package ru.surf.nikita_makarov.jotter.util;
 
 import android.graphics.Color;
 

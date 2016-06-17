@@ -1,7 +1,5 @@
-package ru.surf.nikita_makarov.jotter;
+package ru.surf.nikita_makarov.jotter.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,16 +12,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.List;
+import ru.surf.nikita_makarov.jotter.view.DetailsTransition;
+import ru.surf.nikita_makarov.jotter.R;
 
-public class Note extends Fragment {
+public class NoteFragment extends Fragment {
 
-    public LinearLayout button;
-    public TextView txt, txt2;
+    public LinearLayout buttonLinearLayout;
+    public TextView textView1;
+    public TextView textView2;
+    public ImageView buttonImageView;
     public int fragmentId = 0, fragmentColor = 0, fragmentHeight = 0;
     public String fragmentText, fragmentTheme, fragmentDate;
     public final String fragmentTag = "fragmentInfo";
-    public ImageView btn;
+    public NoteInfoFragment noteInfo;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -40,21 +41,21 @@ public class Note extends Fragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.note, container, false);
-        button = (LinearLayout) view.findViewById(R.id.note);
-        txt = (TextView) view.findViewById(R.id.text);
-        txt2 = (TextView) view.findViewById(R.id.text2);
-        btn = (ImageView) view.findViewById(R.id.btn);
-        button.setOnClickListener(new View.OnClickListener() {
+        View view = inflater.inflate(R.layout.fragment_note, container, false);
+        buttonLinearLayout = (LinearLayout) view.findViewById(R.id.note);
+        textView1 = (TextView) view.findViewById(R.id.text);
+        textView2 = (TextView) view.findViewById(R.id.text2);
+        buttonImageView = (ImageView) view.findViewById(R.id.btn);
+        buttonLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShowInfo();
+                showInfo();
             }
         });
 
-        GridLayout.LayoutParams params = (GridLayout.LayoutParams) button.getLayoutParams();
+        GridLayout.LayoutParams params = (GridLayout.LayoutParams) buttonLinearLayout.getLayoutParams();
         params.height = fragmentHeight;
-        button.setLayoutParams(params);
+        buttonLinearLayout.setLayoutParams(params);
         view.setBackgroundColor(fragmentColor);
         updateTextView();
         return view;
@@ -65,15 +66,22 @@ public class Note extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    public void ShowInfo() {
-        NoteInfo noteInfo = NoteInfo.newInstance(fragmentId, fragmentTheme, fragmentText, fragmentColor, fragmentDate);
-        //The transition is only available in API 21+.
+    public void showInfo() {
+        noteInfo = NoteInfoFragment.newInstance(fragmentId, fragmentTheme, fragmentText, fragmentColor, fragmentDate);
+        makeTransition();
+        replaceFragment();
+    }
+
+    public void makeTransition(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             noteInfo.setSharedElementEnterTransition(new DetailsTransition());
             noteInfo.setEnterTransition(new Fade());
             setExitTransition(new Fade());
             noteInfo.setSharedElementReturnTransition(new DetailsTransition());
         }
+    }
+
+    public void replaceFragment(){
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .hide(getActivity().getSupportFragmentManager().findFragmentByTag("Main"))
@@ -86,16 +94,9 @@ public class Note extends Fragment {
     }
 
     public void updateTextView() {
-        String shortTheme = cropString(fragmentTheme, 22);
-        String shortText = cropString(fragmentText, 30);
-        this.txt.setText(shortTheme);
-        this.txt2.setText(shortText);
-    }
-
-    public String cropString(String crop, int maxCropLength) {
-        if (crop.length() > maxCropLength)
-            return crop.substring(0, crop.substring(0, maxCropLength).lastIndexOf(" ")) + "...";
-        else
-            return crop;
+        String shortTheme = fragmentTheme;
+        String shortText = fragmentText;
+        this.textView1.setText(shortTheme);
+        this.textView2.setText(shortText);
     }
 }

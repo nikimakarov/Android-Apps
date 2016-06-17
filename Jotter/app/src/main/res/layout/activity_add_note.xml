@@ -5,83 +5,82 @@
     android:layout_height="fill_parent"
     android:layout_margin="3dip"
     android:scrollbars="none">
-<RelativeLayout
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relative"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/add_note_margin"
-    android:paddingLeft="@dimen/add_note_margin"
-    android:paddingRight="@dimen/add_note_margin"
-    android:paddingTop="@dimen/add_note_margin"
-    tools:context="ru.surf.nikita_makarov.jotter.AddNoteActivity">
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="54dp"
-        android:labelFor="@+id/editText"
-        android:text="@string/theme"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <EditText
-        android:id="@+id/editText"
+    <RelativeLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/relative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView"
-        android:inputType="text" />
+        android:paddingBottom="@dimen/add_note_margin"
+        android:paddingLeft="@dimen/add_note_margin"
+        android:paddingRight="@dimen/add_note_margin"
+        android:paddingTop="@dimen/add_note_margin"
+        tools:context=".activity.AddNoteActivity">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/editText"
-        android:layout_marginTop="36dp"
-        android:labelFor="@+id/editText2"
-        android:text="@string/text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="54dp"
+            android:labelFor="@+id/editText"
+            android:text="@string/theme"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="false"
-        android:layout_below="@+id/textView2" />
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView"
+            android:inputType="text" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/blue"
-        android:clickable="true"
-        android:text="@string/save_button"
-        android:textColor="@color/white"
-        android:layout_marginRight="10dp"
-        android:layout_alignTop="@+id/color_show"
-        android:layout_alignParentEnd="true" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/editText"
+            android:layout_marginTop="36dp"
+            android:labelFor="@+id/editText2"
+            android:text="@string/text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="39dp"
-        android:labelFor="@+id/editText2"
-        android:text="@string/color_choice"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_below="@+id/editText2"
-        android:layout_alignParentStart="true" />
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="false"
+            android:layout_below="@+id/textView2" />
 
-    <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:id="@+id/color_show"
-        android:layout_alignTop="@+id/textView3"
-        android:layout_toEndOf="@+id/textView" />
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/blue"
+            android:clickable="true"
+            android:text="@string/save_button"
+            android:textColor="@color/white"
+            android:layout_marginRight="10dp"
+            android:layout_alignTop="@+id/color_show"
+            android:layout_alignParentEnd="true" />
 
-</RelativeLayout>
-    </ScrollView>
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="39dp"
+            android:labelFor="@+id/editText2"
+            android:text="@string/color_choice"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@+id/editText2"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/color_show"
+            android:layout_alignTop="@+id/textView3"
+            android:layout_toEndOf="@+id/textView" />
+    </RelativeLayout>
+</ScrollView>

@@ -1,4 +1,4 @@
-package ru.surf.nikita_makarov.jotter;
+package ru.surf.nikita_makarov.jotter.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;

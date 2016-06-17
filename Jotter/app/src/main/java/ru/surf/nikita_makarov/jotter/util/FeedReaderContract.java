@@ -1,4 +1,4 @@
-package ru.surf.nikita_makarov.jotter;
+package ru.surf.nikita_makarov.jotter.util;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +38,7 @@ public final class FeedReaderContract {
 
     public static class FeedReaderDBHelper extends SQLiteOpenHelper {
         public static final int DATABASE_VERSION = 1;
-        public static final String DATABASE_NAME = "NotesDB.db";
+        public static final String DATABASE_NAME = "Database.db";
 
         public FeedReaderDBHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -61,7 +60,7 @@ public final class FeedReaderContract {
             onUpgrade(db, oldVersion, newVersion);
         }
 
-        protected void pushNote(int idForDB, String themeForDB, String textForDB,
+        public void pushNote(int idForDB, String themeForDB, String textForDB,
                                 String dateForDB, int colorForDB) {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -77,25 +76,20 @@ public final class FeedReaderContract {
             db.close();
         }
 
-        protected List<NoteStruct> getAllNotes() {
-            List<NoteStruct> notes = new LinkedList<>();
+        public List<Note> getAllNotes() {
+            List<Note> notes = new LinkedList<>();
             String query = "SELECT * FROM " + FeedEntry.TABLE_NAME;
             SQLiteDatabase db = this.getReadableDatabase();
             Cursor cursor = db.rawQuery(query, null);
-            NoteStruct note;
+            Note note;
             if (cursor.moveToFirst()) {
                 do {
-                    note = new NoteStruct();
+                    note = new Note();
                     note.id = Integer.parseInt(cursor.getString(0));
-                    Log.v("X",cursor.getString(0));
                     note.theme = cursor.getString(1);
-                    Log.v("X",cursor.getString(1));
                     note.text = cursor.getString(2);
-                    Log.v("X",cursor.getString(2));
                     note.date = cursor.getString(3);
-                    Log.v("X",cursor.getString(3));
                     note.color = Integer.parseInt(cursor.getString(4));
-                    Log.v("X",cursor.getString(4));
                     notes.add(note);
                 } while (cursor.moveToNext());
             }

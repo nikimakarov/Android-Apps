@@ -4,6 +4,8 @@
     <string name="save_button">Save it!</string>
     <string name="text">Add text:</string>
     <string name="theme">Add theme:</string>
+    <string name="note_fragment_theme">Theme: </string>
+    <string name="note_fragment_date">Date: </string>
     <string name="color_choice">Color:</string>
     <string name="red">Red</string>
     <string name="green">Green</string>
@@ -16,4 +18,15 @@
     <string name="confirmation">Do you really want to delete it?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="Id">id</string>
+    <string name="Color">color</string>
+    <string name="Text">text</string>
+    <string name="Date">date</string>
+    <string name="Theme">theme</string>
+    <string name="Height">height</string>
+    <string name="NoteAdd">Brand new note added!</string>
+    <string name="NoteDelete">NoteFragment has been deleted.</string>
+    <string name="Refusal">Refusal. NoteFragment still exists.</string>
+    <string name="Warning">Fill all fields!</string>
 </resources>
+

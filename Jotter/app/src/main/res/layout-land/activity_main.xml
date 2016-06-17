@@ -4,14 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/container">
-
     <ListView
         android:id="@+id/list_landscape"
         android:layout_width="0dp"
         android:layout_weight="0.3"
         android:layout_height="match_parent">
     </ListView>
-
     <LinearLayout
         android:orientation="vertical"
         android:id="@+id/linear_landscape"

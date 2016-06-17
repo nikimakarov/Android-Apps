@@ -1,4 +1,4 @@
-package ru.surf.nikita_makarov.jotter;
+package ru.surf.nikita_makarov.jotter.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
+import ru.surf.nikita_makarov.jotter.util.Border;
 
 public class BorderedTextView extends TextView {
     private Paint paint = new Paint();

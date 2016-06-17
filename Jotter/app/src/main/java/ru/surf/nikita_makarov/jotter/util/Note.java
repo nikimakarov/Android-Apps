@@ -1,15 +1,15 @@
-package ru.surf.nikita_makarov.jotter;
+package ru.surf.nikita_makarov.jotter.util;
 
-public class NoteStruct {
+public class Note {
     public int id;
     public String theme;
     public String text;
     public String date;
     public int color;
     
-    public NoteStruct(){}
+    public Note(){}
     
-    public NoteStruct(int id, String theme, String text, String date, int color){
+    public Note(int id, String theme, String text, String date, int color){
         super();
         this.id = id;
         this.theme = theme;
