@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,14 +24,11 @@ import ru.surf.nikita_makarov.jotter.view.RemovalConfirmation;
 
 public class MainActivity extends AppCompatActivity implements RemovalConfirmation.RemovalConfirmationListener {
     public FeedReaderContract.FeedReaderDBHelper dbHelper;
-    public int fragmentId;
-    public int height;
     public int orientation;
     public static final String themeString = "theme";
     public static final String textString = "text";
     public static final String colorString = "color";
     public static final String dateString = "date";
-    public static final String heightString = "height";
     public static final String idString = "id";
     public static final String removal = "RemovalConfirmation";
     public static final String fragmentInfo= "fragmentInfo";
@@ -56,21 +51,17 @@ public class MainActivity extends AppCompatActivity implements RemovalConfirmati
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("myLogs", "requestCode = " + requestCode + ", resultCode = " + resultCode);
         if (requestCode == 0 & resultCode == 1) {
             if (data == null) {
                 return;
             }
-            fragmentId += 1;
             String themeShowResult = data.getStringExtra(themeString);
             String textShowResult = data.getStringExtra(textString);
             int fragmentColorResult = data.getIntExtra(colorString, 0);
-            int fragmentIdResult = fragmentId;
             String dateShowResult = data.getStringExtra(dateString);
-            dbHelper.pushNote(fragmentIdResult, themeShowResult, textShowResult,
-                    dateShowResult, fragmentColorResult);
-            makeFragment(themeShowResult, textShowResult,
-                    fragmentColorResult, fragmentIdResult, dateShowResult);
+            makeFragment(themeShowResult, textShowResult, fragmentColorResult,
+                    dbHelper.pushNote(themeShowResult, textShowResult,
+                            dateShowResult, fragmentColorResult), dateShowResult);
             Context context = getApplicationContext();
             CharSequence text = getString(R.string.NoteAdd);
             toastShow(context, text);
@@ -99,8 +90,8 @@ public class MainActivity extends AppCompatActivity implements RemovalConfirmati
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
-        NoteInfoFragment fragment = (NoteInfoFragment) getSupportFragmentManager().findFragmentByTag("fragmentInfo");
-        dbHelper.deleteNote(fragment.idInput);
+        NoteInfoFragment fragment = (NoteInfoFragment) getSupportFragmentManager().findFragmentByTag(fragmentInfo);
+        dbHelper.deleteNote(fragment.id);
         updateData();
         CharSequence text = getString(R.string.NoteDelete);
         getSupportFragmentManager().beginTransaction()
@@ -124,17 +115,14 @@ public class MainActivity extends AppCompatActivity implements RemovalConfirmati
         }
     }
 
-    public void makeFragment(String theme, String text, int color, int id, String date) {
-        DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
-        height = displaymetrics.widthPixels / 2 + 4;
+    public void makeFragment(String theme, String text, int color, long id, String date) {
         final NoteFragment fragmentInput = new NoteFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(idString, id);
         bundle.putString(themeString, theme);
         bundle.putString(textString, text);
         bundle.putInt(colorString, color);
-        bundle.putInt(heightString, height);
         bundle.putString(dateString, date);
+        bundle.putLong(idString, id);
         fragmentInput.setArguments(bundle);
         if (id % 2 == 0) {
             fragmentManager.beginTransaction().add(R.id.grid_view_b, fragmentInput).commitAllowingStateLoss();
@@ -158,11 +146,10 @@ public class MainActivity extends AppCompatActivity implements RemovalConfirmati
                 .commit();
     }
 
-    public void fillNewFragment(){
+    public void fillNewFragment() {
         dbHelper = new FeedReaderContract.FeedReaderDBHelper(this);
         List<Note> savedNotes = dbHelper.getAllNotes();
         for (Note savedNote : savedNotes) {
-            fragmentId = savedNote.id;
             makeFragment(savedNote.theme, savedNote.text, savedNote.color, savedNote.id, savedNote.date);
         }
     }

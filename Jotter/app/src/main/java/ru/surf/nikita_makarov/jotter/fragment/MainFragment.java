@@ -9,13 +9,8 @@ import ru.surf.nikita_makarov.jotter.R;
 
 public class MainFragment extends Fragment {
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View myFragmentView = inflater.inflate(R.layout.fragment_layout,
-                container, false);
-
-        return myFragmentView;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_layout, container, false);
     }
 }
 

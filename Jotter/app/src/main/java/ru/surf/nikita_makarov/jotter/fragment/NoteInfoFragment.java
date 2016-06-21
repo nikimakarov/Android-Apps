@@ -3,6 +3,7 @@ package ru.surf.nikita_makarov.jotter.fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,9 +18,13 @@ import ru.surf.nikita_makarov.jotter.R;
 public class NoteInfoFragment extends Fragment{
     public TextView getDateTextView, getThemeTextView;
     public BorderedTextView getTextBorderedTextView;
-    public int idInput, colorInput;
-    public String themeInput, textInput, dateInput;
-    public View separatorView1, sep2;
+    public int color;
+    public long id;
+    public String theme;
+    public String text;
+    public String date;
+    public View separatorView1;
+    public View separatorView2;
     public static final String themeString = "theme";
     public static final String textString = "text";
     public static final String colorString = "color";
@@ -34,6 +39,7 @@ public class NoteInfoFragment extends Fragment{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .show(getActivity().getSupportFragmentManager().findFragmentByTag("Main"))
@@ -41,14 +47,14 @@ public class NoteInfoFragment extends Fragment{
                 .commit();
     }
 
-    public static NoteInfoFragment newInstance(int fragmentId, String fragmentTheme,
-                                               String fragmentText, int fragmentColor, String fragmentDate) {
+    public static NoteInfoFragment newInstance(String fragmentTheme,
+                                               String fragmentText, int fragmentColor, String fragmentDate, long fragmentId) {
         Bundle args = new Bundle();
-        args.putInt(idString, fragmentId);
         args.putString(dateString, fragmentDate);
         args.putString(themeString, fragmentTheme);
         args.putString(textString, fragmentText);
         args.putInt(colorString, fragmentColor);
+        args.putLong(idString, fragmentId);
         NoteInfoFragment fragment = new NoteInfoFragment();
         fragment.setArguments(args);
         return fragment;
@@ -60,28 +66,28 @@ public class NoteInfoFragment extends Fragment{
         getDateTextView = (TextView) view.findViewById(R.id.date);
         getThemeTextView = (TextView) view.findViewById(R.id.text_theme);
         separatorView1 = view.findViewById(R.id.separator1);
-        sep2 = view.findViewById(R.id.separator2);
+        separatorView2 = view.findViewById(R.id.separator2);
         getTextBorderedTextView = (BorderedTextView) view.findViewById(R.id.text_main);
         DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
         getTextBorderedTextView.setMinHeight(displaymetrics.widthPixels/2);
-        idInput = getArguments().getInt(idString, 0);
-        themeInput = getArguments().getString(themeString);
-        textInput = getArguments().getString(textString);
-        colorInput = getArguments().getInt(colorString, 0);
-        dateInput = getArguments().getString(dateString);
-        themeInput = getString(R.string.note_fragment_theme) + themeInput;
-        dateInput = getString(R.string.note_fragment_date) + dateInput;
-        getThemeTextView.setText(themeInput);
-        getTextBorderedTextView.setText(textInput);
-        getDateTextView.setText(dateInput);
-        getThemeTextView.setTextColor(colorInput);
-        getTextBorderedTextView.setTextColor(colorInput);
-        getDateTextView.setTextColor(colorInput);
-        separatorView1.setBackgroundColor(colorInput);
-        sep2.setBackgroundColor(colorInput);
-        getTextBorderedTextView.setBackgroundColor(Color.argb(Color.alpha(colorInput)-200,Color.red(colorInput),
-                Color.green(colorInput),Color.blue(colorInput)));
-        getTextBorderedTextView.setBorders(colorInput, 4);
+        theme = getArguments().getString(themeString);
+        text = getArguments().getString(textString);
+        color = getArguments().getInt(colorString, 0);
+        date = getArguments().getString(dateString);
+        id = getArguments().getLong(idString, 0);
+        String themeOnScreen = getString(R.string.note_fragment_theme) + theme;
+        String dateOnScreen = getString(R.string.note_fragment_date) + date;
+        getThemeTextView.setText(themeOnScreen);
+        getTextBorderedTextView.setText(text);
+        getDateTextView.setText(dateOnScreen);
+        getThemeTextView.setTextColor(color);
+        getTextBorderedTextView.setTextColor(color);
+        getDateTextView.setTextColor(color);
+        separatorView1.setBackgroundColor(color);
+        separatorView2.setBackgroundColor(color);
+        getTextBorderedTextView.setBackgroundColor(Color.argb(Color.alpha(color)-200,Color.red(color),
+                Color.green(color),Color.blue(color)));
+        getTextBorderedTextView.setBorders(color, 4);
         return view;
     }
 

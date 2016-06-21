@@ -61,10 +61,6 @@ public class BorderedTextView extends TextView {
         }
     }
 
-    public Border[] getBorders() {
-        return borders;
-    }
-
     public void setBorders(int Color, int Width) {
         for (int side = 0; side < 4; side++) {
             this.borders[side] = new Border();

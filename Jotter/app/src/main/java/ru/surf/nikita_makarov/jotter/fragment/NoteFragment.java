@@ -7,7 +7,6 @@ import android.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,8 +20,11 @@ public class NoteFragment extends Fragment {
     public TextView textView1;
     public TextView textView2;
     public ImageView buttonImageView;
-    public int fragmentId = 0, fragmentColor = 0, fragmentHeight = 0;
-    public String fragmentText, fragmentTheme, fragmentDate;
+    public int fragmentColor = 0;
+    public long fragmentId;
+    public String fragmentText;
+    public String fragmentTheme;
+    public String fragmentDate;
     public final String fragmentTag = "fragmentInfo";
     public NoteInfoFragment noteInfo;
 
@@ -31,12 +33,11 @@ public class NoteFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         Bundle bundle = getArguments();
-        fragmentId = bundle.getInt("id");
         fragmentTheme = bundle.getString("theme");
         fragmentText = bundle.getString("text");
         fragmentColor = bundle.getInt("color");
-        fragmentHeight = bundle.getInt("height");
         fragmentDate = bundle.getString("date");
+        fragmentId  = bundle.getLong("id");
     }
 
     @Override
@@ -52,10 +53,6 @@ public class NoteFragment extends Fragment {
                 showInfo();
             }
         });
-
-        GridLayout.LayoutParams params = (GridLayout.LayoutParams) buttonLinearLayout.getLayoutParams();
-        params.height = fragmentHeight;
-        buttonLinearLayout.setLayoutParams(params);
         view.setBackgroundColor(fragmentColor);
         updateTextView();
         return view;
@@ -67,7 +64,7 @@ public class NoteFragment extends Fragment {
     }
 
     public void showInfo() {
-        noteInfo = NoteInfoFragment.newInstance(fragmentId, fragmentTheme, fragmentText, fragmentColor, fragmentDate);
+        noteInfo = NoteInfoFragment.newInstance(fragmentTheme, fragmentText, fragmentColor, fragmentDate, fragmentId);
         makeTransition();
         replaceFragment();
     }

@@ -1,7 +1,7 @@
 package ru.surf.nikita_makarov.jotter.util;
 
 public class Note {
-    public int id;
+    public long id;
     public String theme;
     public String text;
     public String date;

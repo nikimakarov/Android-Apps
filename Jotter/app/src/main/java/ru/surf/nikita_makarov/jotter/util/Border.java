@@ -3,7 +3,6 @@ package ru.surf.nikita_makarov.jotter.util;
 import android.graphics.Color;
 
 public class Border {
-    private int orientation;
     private int width;
     private int color = Color.BLACK;
     private int style;
@@ -32,11 +31,4 @@ public class Border {
         this.style = style;
     }
 
-    public int getOrientation() {
-        return orientation;
-    }
-
-    public void setOrientation(int orientation) {
-        this.orientation = orientation;
-    }
 }
