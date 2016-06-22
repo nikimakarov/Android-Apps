@@ -1,5 +1,6 @@
 package ru.surf.nikita_makarov.jotter.activity;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -24,7 +25,6 @@ import ru.surf.nikita_makarov.jotter.view.RemovalConfirmation;
 
 public class MainActivity extends AppCompatActivity implements RemovalConfirmation.RemovalConfirmationListener {
     public FeedReaderContract.FeedReaderDBHelper dbHelper;
-    public int orientation;
     public static final String themeString = "theme";
     public static final String textString = "text";
     public static final String colorString = "color";
@@ -39,18 +39,12 @@ public class MainActivity extends AppCompatActivity implements RemovalConfirmati
     protected void onCreate(Bundle onSaveInstanceState) {
         super.onCreate(onSaveInstanceState);
         setContentView(R.layout.activity_main);
-        orientation = getScreenOrientation();
         updateData();
-
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 & resultCode == 1) {
             if (data == null) {
                 return;
@@ -59,12 +53,12 @@ public class MainActivity extends AppCompatActivity implements RemovalConfirmati
             String textShowResult = data.getStringExtra(textString);
             int fragmentColorResult = data.getIntExtra(colorString, 0);
             String dateShowResult = data.getStringExtra(dateString);
-            makeFragment(themeShowResult, textShowResult, fragmentColorResult,
-                    dbHelper.pushNote(themeShowResult, textShowResult,
-                            dateShowResult, fragmentColorResult), dateShowResult);
+            dbHelper.pushNote(themeShowResult, textShowResult, dateShowResult, fragmentColorResult);
             Context context = getApplicationContext();
             CharSequence text = getString(R.string.NoteAdd);
             toastShow(context, text);
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            updateData();
         }
     }
 
@@ -124,10 +118,14 @@ public class MainActivity extends AppCompatActivity implements RemovalConfirmati
         bundle.putString(dateString, date);
         bundle.putLong(idString, id);
         fragmentInput.setArguments(bundle);
-        if (id % 2 == 0) {
-            fragmentManager.beginTransaction().add(R.id.grid_view_b, fragmentInput).commitAllowingStateLoss();
+        if (!isTablet()){
+            if (id % 2 != 0) {
+                fragmentManager.beginTransaction().add(R.id.grid_view_b, fragmentInput).commit();
+            } else {
+                fragmentManager.beginTransaction().add(R.id.grid_view_a, fragmentInput).commit();
+            }
         } else {
-            fragmentManager.beginTransaction().add(R.id.grid_view_a, fragmentInput).commitAllowingStateLoss();
+                fragmentManager.beginTransaction().add(R.id.grid_view_c, fragmentInput).commit();
         }
     }
 
@@ -141,16 +139,23 @@ public class MainActivity extends AppCompatActivity implements RemovalConfirmati
             getSupportFragmentManager().beginTransaction()
                     .remove(getSupportFragmentManager().findFragmentByTag(main)).commit();
         }
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, new MainFragment(), main)
-                .commit();
+        if (!isTablet()){
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, new MainFragment(), main)
+                    .commit();
+        } else{
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.list_landscape, new MainFragment(), main)
+                    .commit();
+        }
     }
 
     public void fillNewFragment() {
         dbHelper = new FeedReaderContract.FeedReaderDBHelper(this);
         List<Note> savedNotes = dbHelper.getAllNotes();
-        for (Note savedNote : savedNotes) {
-            makeFragment(savedNote.theme, savedNote.text, savedNote.color, savedNote.id, savedNote.date);
+        for (int i = savedNotes.size()-1; i >=0; i--) {
+            makeFragment(savedNotes.get(i).theme, savedNotes.get(i).text, savedNotes.get(i).color,
+                    savedNotes.get(i).id, savedNotes.get(i).date);
         }
     }
 
@@ -161,12 +166,7 @@ public class MainActivity extends AppCompatActivity implements RemovalConfirmati
     toast.show();
     }
 
-    public int getScreenOrientation() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            return 1;
-        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            return 2;
-        }
-        return 0;
+    public boolean isTablet() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 }

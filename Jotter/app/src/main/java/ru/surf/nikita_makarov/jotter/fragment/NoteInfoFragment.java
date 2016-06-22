@@ -1,5 +1,6 @@
 package ru.surf.nikita_makarov.jotter.fragment;
 
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -37,14 +38,16 @@ public class NoteInfoFragment extends Fragment{
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .show(getActivity().getSupportFragmentManager().findFragmentByTag("Main"))
-                .addToBackStack(null)
-                .commit();
+    public void onPause() {
+        super.onPause();
+        if (!isTablet()){
+            getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .show(getActivity().getSupportFragmentManager().findFragmentByTag("Main"))
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     public static NoteInfoFragment newInstance(String fragmentTheme,
@@ -69,7 +72,11 @@ public class NoteInfoFragment extends Fragment{
         separatorView2 = view.findViewById(R.id.separator2);
         getTextBorderedTextView = (BorderedTextView) view.findViewById(R.id.text_main);
         DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
-        getTextBorderedTextView.setMinHeight(displaymetrics.widthPixels/2);
+        if(!isTablet()){
+                getTextBorderedTextView.setMinHeight(displaymetrics.widthPixels/2);
+        } else {
+                getTextBorderedTextView.setMinHeight(displaymetrics.widthPixels/8);
+        }
         theme = getArguments().getString(themeString);
         text = getArguments().getString(textString);
         color = getArguments().getInt(colorString, 0);
@@ -96,4 +103,9 @@ public class NoteInfoFragment extends Fragment{
         inflater.inflate(R.menu.delete, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
+    public boolean isTablet() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
 }
