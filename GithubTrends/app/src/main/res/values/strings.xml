@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">GitHub Trends</string>
+    <string name="app_name">GitTrends</string>
+    <string name="repository_name">Name of Repository</string>
+    <string name="description">Description</string>
+    <string name="language">Language</string>
+    <string name="forks">Forks</string>
+    <string name="stars">Stars</string>
 </resources>

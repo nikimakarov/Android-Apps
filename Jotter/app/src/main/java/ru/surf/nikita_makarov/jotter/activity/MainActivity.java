@@ -23,7 +23,8 @@ import ru.surf.nikita_makarov.jotter.fragment.NoteInfoFragment;
 import ru.surf.nikita_makarov.jotter.R;
 import ru.surf.nikita_makarov.jotter.view.RemovalConfirmation;
 
-public class MainActivity extends AppCompatActivity implements RemovalConfirmation.RemovalConfirmationListener {
+public class
+MainActivity extends AppCompatActivity implements RemovalConfirmation.RemovalConfirmationListener {
     public FeedReaderContract.FeedReaderDBHelper dbHelper;
     public static final String themeString = "theme";
     public static final String textString = "text";
