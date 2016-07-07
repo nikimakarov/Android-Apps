@@ -10,9 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.TimeZone;
 
 import okhttp3.OkHttpClient;
@@ -24,7 +22,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.surf.nikita_makarov.githubtrends.R;
 import ru.surf.nikita_makarov.githubtrends.repository_utils.RepositoryAdapter;
-import ru.surf.nikita_makarov.githubtrends.repository_utils.RepositoryInfo;
 import ru.surf.nikita_makarov.githubtrends.repository_utils.RepositoryInfoResponse;
 import ru.surf.nikita_makarov.githubtrends.utils.GitHubService;
 
@@ -34,18 +31,17 @@ public class PageFragment extends Fragment {
     public String API_URL = "https://api.github.com/";
     public String chosenDate = "created:2016-07-05";
     public RecyclerView mRecyclerView;
+    public View fragmentView;
     public RepositoryAdapter repositoryAdapter;
-    public List<RepositoryInfo> result;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pageNumber = getArguments() != null ? getArguments().getInt("num") : 1;
-        result = new ArrayList<>();
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         retrofitStart();
     }
@@ -61,17 +57,17 @@ public class PageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment, container, false);
+        return fragmentView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mRecyclerView = (RecyclerView) getView().findViewById(R.id.recycler_main);
+        mRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.recycler_main);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         repositoryAdapter = new RepositoryAdapter();
-        repositoryAdapter.addData(result, getContext());
         mRecyclerView.setAdapter(repositoryAdapter);
     }
 
@@ -90,7 +86,8 @@ public class PageFragment extends Fragment {
         call.enqueue(new Callback<RepositoryInfoResponse>() {
             @Override
             public void onResponse(Call<RepositoryInfoResponse> call, Response<RepositoryInfoResponse> response) {
-                result = response.body().getItems();
+                repositoryAdapter.clearData();
+                repositoryAdapter.addData(response.body().getItems(), getContext());
                 repositoryAdapter.notifyDataSetChanged();
             }
 

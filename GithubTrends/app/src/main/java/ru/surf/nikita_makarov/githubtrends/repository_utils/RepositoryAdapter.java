@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ru.surf.nikita_makarov.githubtrends.R;
 
@@ -56,8 +57,8 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
         String descriptionBasic = "Made" + languageShow(ri.getLanguage()) + " by " + ri.getAuthor();
         repositoryViewHolder.authorWithLanguageTextView.setText(descriptionBasic);
         repositoryViewHolder.descriptionTextView.setText(ri.getDescription());
-        repositoryViewHolder.forksTextView.setText(Integer.toString(ri.getForks_count()));
-        repositoryViewHolder.starsTextView.setText(Integer.toString(ri.getStargazers_count()));
+        repositoryViewHolder.forksTextView.setText(String.format(Locale.ROOT, "%d%n", ri.getForks_count()));
+        repositoryViewHolder.starsTextView.setText(String.format(Locale.ROOT, "%d%n",ri.getStargazers_count()));
         repositoryViewHolder.mainLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,9 +68,14 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
     }
 
     public String languageShow(String language){
-        if (!language.equals("null")){
-            return " on " + language;
-        } else {
+        try{
+            if (!language.equals("null")){
+                return " on " + language;
+            } else {
+                return "";
+            }
+        }
+        catch(NullPointerException ex){
             return "";
         }
     }
