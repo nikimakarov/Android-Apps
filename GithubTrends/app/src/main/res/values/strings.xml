@@ -5,4 +5,8 @@
     <string name="language">Language</string>
     <string name="forks">Forks</string>
     <string name="stars">Stars</string>
+    <string name="user_pic">User Portrait</string>
+    <string name="repository_ex">anime / Javascript</string>
+    <string name="name_ex">juliangarnier (Julian Garnier)</string>
+    <string name="note">Notebook</string>
 </resources>

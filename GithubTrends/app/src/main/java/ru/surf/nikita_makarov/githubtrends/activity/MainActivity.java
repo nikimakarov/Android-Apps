@@ -1,6 +1,7 @@
 package ru.surf.nikita_makarov.githubtrends.activity;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -20,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         viewPager = (ViewPager) findViewById(R.id.pager);
         pagerAdapter = new FragmentPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);

@@ -1,11 +1,14 @@
 package ru.surf.nikita_makarov.githubtrends.repository_utils;
 
-public class RepositoryInfo {
+import java.util.ArrayList;
+import java.util.List;
 
-    private RepositoryOwner owner;
+import ru.surf.nikita_makarov.githubtrends.database.RepositoryDetails;
+
+public class RepositoryInfo {
+    private RepositoryOwner owner = new RepositoryOwner();
     private String full_name;
-    private String id;
-    private String url;
+    private String html_url;
     private String language;
     private String description;
     private int forks_count;
@@ -13,6 +16,10 @@ public class RepositoryInfo {
 
     public String getAuthor() {
         return owner.getLogin();
+    }
+
+    public void setAuthor(String login) {
+        owner.setLogin(login);
     }
 
     public String getFull_name() {
@@ -23,20 +30,12 @@ public class RepositoryInfo {
         this.full_name = full_name;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setHtml_url(String html_url) {
+        this.html_url = html_url;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getUrl() {
-        return url;
+    public String getHtml_url() {
+        return html_url;
     }
 
     public void setLanguage(String language) {
@@ -81,5 +80,15 @@ public class RepositoryInfo {
         }
 
         public String login;
+    }
+
+    public void transform(RepositoryDetails repositoryDetails) {
+        setAuthor(repositoryDetails.ownerName);
+        setDescription(repositoryDetails.description);
+        setFull_name(repositoryDetails.repoName);
+        setLanguage(repositoryDetails.language);
+        setHtml_url(repositoryDetails.htmlUrl);
+        setForks_count(repositoryDetails.forksCount);
+        setStargazers_count(repositoryDetails.starsCount);
     }
 }
