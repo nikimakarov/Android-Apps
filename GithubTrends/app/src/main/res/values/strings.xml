@@ -9,4 +9,5 @@
     <string name="repository_ex">anime / Javascript</string>
     <string name="name_ex">juliangarnier (Julian Garnier)</string>
     <string name="note">Notebook</string>
+    <string name="filter_description">Filter</string>
 </resources>

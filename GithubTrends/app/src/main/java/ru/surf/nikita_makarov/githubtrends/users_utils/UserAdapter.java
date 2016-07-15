@@ -129,6 +129,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         }
     }
 
+    public void sendToWebPage(String url){
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        context.startActivity(browserIntent);
+    }
+
     public DatabaseHelper getHelper() {
         if (databaseUserHelper == null) {
             databaseUserHelper = OpenHelperManager.getHelper(context,DatabaseHelper.class);

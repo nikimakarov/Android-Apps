@@ -19,7 +19,9 @@ import com.j256.ormlite.dao.Dao;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -246,4 +248,24 @@ public class PageFragment extends Fragment {
         return cm.getActiveNetworkInfo()!=null;
     }
 
+    public String dateInterval(String dateFilter) {
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        String zero1 = month < 10 ? "0" : "";
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String zero2 = day < 10 ? "0" : "";
+        switch (dateFilter) {
+            case "today":
+                return (year + "-" + zero1 + month + "-" + zero2 + day);
+            case "week":
+                return (year + "-" + zero1 + month + "-" + zero2 + (day - 7));
+            case "month":
+                return (year + "-" + zero1 + (month - 1) + "-" + zero2 + day);
+            case "year":
+                return ((year - 1) + "-" + zero1 + month + "-" + zero2 + day);
+            default:
+                return (year + "-" + zero1 + month + "-" + zero2 + day);
+        }
+    }
 }
