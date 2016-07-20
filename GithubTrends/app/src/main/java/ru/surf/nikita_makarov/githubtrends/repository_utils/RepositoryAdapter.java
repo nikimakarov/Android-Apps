@@ -27,6 +27,12 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
     public List<RepositoryInfo> repositoryList;
     public Context context;
     public DatabaseHelper databaseRepositoryHelper = null;
+    private static final String madeString = "Made";
+    private static final String byString = " by ";
+    private static final String onString = " on ";
+    private static final String emptyString = "";
+    private static final String formatString = "%d%n";
+    private static final String nullString = "null";
 
     public RepositoryAdapter() {
         super();
@@ -78,11 +84,11 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
         RepositoryInfo ri = repositoryList.get(i);
         final String url = ri.getHtml_url();
         repositoryViewHolder.repositoryTextView.setText(ri.getFull_name());
-        String descriptionBasic = "Made" + languageShow(ri.getLanguage()) + " by " + ri.getAuthor();
+        String descriptionBasic = madeString + languageShow(ri.getLanguage()) + byString + ri.getAuthor();
         repositoryViewHolder.authorWithLanguageTextView.setText(descriptionBasic);
         repositoryViewHolder.descriptionTextView.setText(ri.getDescription());
-        repositoryViewHolder.forksTextView.setText(String.format(Locale.ROOT, "%d%n", ri.getForks_count()));
-        repositoryViewHolder.starsTextView.setText(String.format(Locale.ROOT, "%d%n",ri.getStargazers_count()));
+        repositoryViewHolder.forksTextView.setText(String.format(Locale.ROOT, formatString, ri.getForks_count()));
+        repositoryViewHolder.starsTextView.setText(String.format(Locale.ROOT, formatString,ri.getStargazers_count()));
         repositoryViewHolder.mainLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,14 +99,14 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
 
     public String languageShow(String language){
         try{
-            if (!language.equals("null")){
-                return " on " + language;
+            if (!language.equals(nullString)){
+                return onString + language;
             } else {
-                return "";
+                return emptyString;
             }
         }
         catch(NullPointerException ex){
-            return "";
+            return emptyString;
         }
     }
 

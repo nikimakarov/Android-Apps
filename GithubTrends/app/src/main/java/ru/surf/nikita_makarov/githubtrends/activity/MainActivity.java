@@ -1,5 +1,6 @@
 package ru.surf.nikita_makarov.githubtrends.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
@@ -13,18 +14,24 @@ import ru.surf.nikita_makarov.githubtrends.utils.FragmentPageAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
-    public ViewPager viewPager;
-    public PagerAdapter pagerAdapter;
-    public TabLayout tabLayout;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+    private String date;
+    private String language;
+    protected static final String languageString = "language";
+    protected static final String dateString = "date";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent = getIntent();
+        date = intent.getStringExtra(dateString);
+        language = intent.getStringExtra(languageString);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         viewPager = (ViewPager) findViewById(R.id.pager);
-        pagerAdapter = new FragmentPageAdapter(getSupportFragmentManager());
+        PagerAdapter pagerAdapter = new FragmentPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setPageTransformer(true, new DepthPageTransformer());
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
@@ -43,4 +50,13 @@ public class MainActivity extends AppCompatActivity {
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
         }
     }
+
+    public String getDate(){
+        return date;
+    }
+
+    public String getLanguage(){
+        return language;
+    }
+
 }

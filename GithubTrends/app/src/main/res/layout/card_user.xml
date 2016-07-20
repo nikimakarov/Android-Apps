@@ -58,28 +58,28 @@
 
             <ImageView
                 android:id="@+id/notebookImageView"
-                android:contentDescription="@string/note"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_alignBottom="@+id/descriptionTextView"
                 android:layout_alignStart="@+id/loginWithNameTextView"
-                android:background="@drawable/notebook" />
+                android:background="@drawable/notebook"
+                android:contentDescription="@string/note" />
 
         </RelativeLayout>
 
         <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.25"
-        android:gravity="center">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:gravity="center">
 
-        <ImageView
-            android:id="@+id/userPortraitImageView"
-            android:contentDescription="@string/user_pic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_gravity="center" />
+            <ImageView
+                android:id="@+id/userPortraitImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@string/user_pic"
+                android:padding="10dp" />
         </LinearLayout>
 
 

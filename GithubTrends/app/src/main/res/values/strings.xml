@@ -10,4 +10,9 @@
     <string name="name_ex">juliangarnier (Julian Garnier)</string>
     <string name="note">Notebook</string>
     <string name="filter_description">Filter</string>
+    <string name="translation">Translation</string>
+    <string name="calendar">Calendar</string>
+    <string name="filter">Filter the search</string>
+    <string name="language_title">Language:</string>
+    <string name="date_title">Created:</string>
 </resources>

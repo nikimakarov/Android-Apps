@@ -19,11 +19,25 @@ import ru.surf.nikita_makarov.githubtrends.R;
 
 public class SearchActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    protected ImageView filterImageView;
-    protected Spinner languageSpinner;
-    protected Spinner dateSpinner;
-    protected static final String languageString = "language";
-    protected static final String dateString = "date";
+    private ImageView filterImageView;
+    private Spinner languageSpinner;
+    private Spinner dateSpinner;
+    private static final String languageString = "language";
+    private static final String dateString = "date";
+    private static final String cString = "C";
+    private static final String javaString = "Java";
+    private static final String pythonString = "Python";
+    private static final String javaScriptString = "Javascript";
+    private static final String objCString = "Objective-C";
+    private static final String swiftString = "Swift";
+    private static final String htmlString = "HTML";
+    private static final String scalaString = "Scala";
+    private static final String allString = "all";
+    private static final String todayString = "today";
+    private static final String weekString = "week";
+    private static final String monthString = "month";
+    private static final String yearString = "year";
+    private static final String allTimeString = "all time";
     protected String languageChoice;
     protected String dateChoice;
 
@@ -32,8 +46,8 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         filterImageView = (ImageView)findViewById(R.id.filterImageView);
-        languageSpinner = (Spinner) findViewById(R.id.spinnerLanguage);
-        dateSpinner = (Spinner) findViewById(R.id.spinnerDate);
+        languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
+        dateSpinner = (Spinner) findViewById(R.id.dateSpinner);
         setLanguageSpinner();
         setDateSpinner();
         filterImageView.setOnClickListener(new View.OnClickListener() {
@@ -65,15 +79,15 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     protected void setLanguageSpinner(){
         languageSpinner.setOnItemSelectedListener(this);
         List<String> languageCategories = new ArrayList<String>();
-        languageCategories.add("C++");
-        languageCategories.add("Java");
-        languageCategories.add("Python");
-        languageCategories.add("JavaScript");
-        languageCategories.add("Objective-C");
-        languageCategories.add("Swift");
-        languageCategories.add("HTML");
-        languageCategories.add("Scala");
-        languageCategories.add("all");
+        languageCategories.add(cString);
+        languageCategories.add(javaString);
+        languageCategories.add(pythonString);
+        languageCategories.add(javaScriptString);
+        languageCategories.add(objCString);
+        languageCategories.add(swiftString);
+        languageCategories.add(htmlString);
+        languageCategories.add(scalaString);
+        languageCategories.add(allString);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, languageCategories);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -83,11 +97,11 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     protected void setDateSpinner(){
         dateSpinner.setOnItemSelectedListener(this);
         List<String> dateCategories = new ArrayList<String>();
-        dateCategories.add("today");
-        dateCategories.add("week");
-        dateCategories.add("month");
-        dateCategories.add("year");
-        dateCategories.add("all time");
+        dateCategories.add(todayString);
+        dateCategories.add(weekString);
+        dateCategories.add(monthString);
+        dateCategories.add(yearString);
+        dateCategories.add(allTimeString);
         ArrayAdapter<String> dateAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, dateCategories);
         dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -99,7 +113,6 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         String item = parent.getItemAtPosition(position).toString();
     }
     public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
     }
 
 }

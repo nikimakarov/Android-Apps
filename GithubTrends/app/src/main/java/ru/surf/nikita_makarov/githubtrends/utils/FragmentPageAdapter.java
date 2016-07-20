@@ -7,8 +7,10 @@ import ru.surf.nikita_makarov.githubtrends.fragment.PageFragment;
 
 public class FragmentPageAdapter extends android.support.v4.app.FragmentPagerAdapter {
 
-    final int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[] { "Repositories", "Users"};
+    public final int PAGE_COUNT = 2;
+    private final static String RepositoriesString = "Repositories";
+    private final static String UsersString = "Users";
+    private String tabTitles[] = new String[] {RepositoriesString, UsersString};
 
     public FragmentPageAdapter(FragmentManager fm) {
         super(fm);

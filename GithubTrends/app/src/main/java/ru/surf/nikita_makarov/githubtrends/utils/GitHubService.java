@@ -11,19 +11,19 @@ import ru.surf.nikita_makarov.githubtrends.users_utils.UserInfoResponse;
 public interface GitHubService {
     @GET("search/repositories")
     Call<RepositoryInfoResponse> repositories(
-            @Query("q") String query,
+            @Query(value = "q", encoded = true) String query,
             @Query("sort") String sort,
             @Query("order") String order,
-            @Query("page") String page,
-            @Query("per_page") String per_page);
+            @Query("page") int page,
+            @Query("per_page") int per_page);
 
     @GET("search/repositories")
     Call<UserInfoResponse> smallRepositories(
-            @Query("q") String query,
+            @Query(value = "q", encoded = true) String query,
             @Query("sort") String sort,
             @Query("order") String order,
-            @Query("page") String page,
-            @Query("per_page") String per_page);
+            @Query("page") int page,
+            @Query("per_page") int per_page);
 
     @GET("users/{username}")
     Call<UserInfo> users(

@@ -16,6 +16,9 @@ import ru.surf.nikita_makarov.githubtrends.R;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "github_trends.db";
+    private static final String unableToCreateString = "Unable to create databases";
+    private static final String unableToUpgradeString = "Unable to upgrade database from version ";
+    private static final String toNewString = " to new ";
     private static final int DATABASE_VERSION = 1;
 
     private Dao<RepositoryDetails, Integer> repositoryDao;
@@ -31,7 +34,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, RepositoryDetails.class);
             TableUtils.createTable(connectionSource, UserDetails.class);
         } catch (SQLException e) {
-            Log.e(DatabaseHelper.class.getName(), "Unable to create databases", e);
+            Log.e(DatabaseHelper.class.getName(), unableToCreateString, e);
         }
     }
 
@@ -44,7 +47,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             onCreate(sqliteDatabase, connectionSource);
 
         } catch (SQLException e) {
-            Log.e(DatabaseHelper.class.getName(), "Unable to upgrade database from version " + oldVer + " to new "
+            Log.e(DatabaseHelper.class.getName(), unableToUpgradeString + oldVer + toNewString
                     + newVer, e);
         }
     }

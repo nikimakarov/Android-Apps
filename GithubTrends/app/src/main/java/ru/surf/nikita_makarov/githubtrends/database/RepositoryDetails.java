@@ -8,7 +8,7 @@ import ru.surf.nikita_makarov.githubtrends.repository_utils.RepositoryInfo;
 
 public class RepositoryDetails implements Serializable {
 
-    public static final String ID_FIELD = "repository_id";
+    protected static final String ID_FIELD = "repository_id";
 
     @DatabaseField(generatedId = true, columnName = ID_FIELD)
     public int repositoryId;
@@ -34,7 +34,7 @@ public class RepositoryDetails implements Serializable {
     @DatabaseField(columnName = "stars_count")
     public int starsCount;
 
-    public RepositoryDetails() {
+    public RepositoryDetails(){
     }
 
     public RepositoryDetails(RepositoryInfo repositoryInfo) {
