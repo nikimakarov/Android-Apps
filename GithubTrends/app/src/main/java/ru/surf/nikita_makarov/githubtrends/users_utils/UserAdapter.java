@@ -23,7 +23,7 @@ import ru.surf.nikita_makarov.githubtrends.activity.UserExtendedInfoActivity;
 import ru.surf.nikita_makarov.githubtrends.database.DatabaseHelper;
 import ru.surf.nikita_makarov.githubtrends.database.UserDetails;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder>{
+public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
     public List<UserInfo> userList;
     public List<SmallRepositoryInfo> smallRepositoryInfoList;
@@ -72,18 +72,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         notifyDataSetChanged();
     }
 
-    public void sendUserToDatabase(UserInfo user){
+    public void sendUserToDatabase(UserInfo user) {
         try {
             userList.add(user);
             final Dao<UserDetails, Integer> repoDao = getHelper().getUserDao();
-                for (int j = 0; j < smallRepositoryInfoList.size(); j++){
-                    if (user.getLogin().equals(smallRepositoryInfoList.get(j).getAuthorLogin())) {
-                        UserDetails userSpecimen = new UserDetails(user, smallRepositoryInfoList.get(j));
-                        repoDao.create(userSpecimen);
-                    }
+            for (int j = 0; j < smallRepositoryInfoList.size(); j++) {
+                if (user.getLogin().equals(smallRepositoryInfoList.get(j).getAuthorLogin())) {
+                    UserDetails userSpecimen = new UserDetails(user, smallRepositoryInfoList.get(j));
+                    repoDao.create(userSpecimen);
                 }
-        }
-        catch (SQLException ex) {
+            }
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
@@ -103,12 +102,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public void onBindViewHolder(final UserViewHolder userViewHolder, int i) {
         ui = userList.get(i);
-        for(int j = 0; j < smallRepositoryInfoList.size(); j++) {
+        for (int j = 0; j < smallRepositoryInfoList.size(); j++) {
             if (ui.getLogin().equals(smallRepositoryInfoList.get(j).getAuthorLogin())) {
                 smi = smallRepositoryInfoList.get(j);
             }
         }
-        //Picasso.with(context).setLoggingEnabled(true);
+        Picasso.with(context).setLoggingEnabled(true);
         Picasso.with(context).load(ui.getAvatar_url())
                 .noFade()
                 .placeholder(R.drawable.github_logo1)
@@ -116,14 +115,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 .into(userViewHolder.userPortraitImageView);
         String userLoginAndName;
         try {
-            if (!ui.getName().equals(nullString)){
+            if (!ui.getName().equals(nullString)) {
                 userLoginAndName = ui.getLogin() + leftBracketString + ui.getName() + rightBracketString;
-            }
-            else {
+            } else {
                 userLoginAndName = ui.getLogin();
             }
-        }
-        catch(NullPointerException ex){
+        } catch (NullPointerException ex) {
             userLoginAndName = ui.getLogin();
         }
         userViewHolder.loginWithNameTextView.setText(userLoginAndName);
@@ -138,23 +135,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         });
     }
 
-    public String languageShow(String language){
-        try{
-            if (!language.equals(nullString)){
+    public String languageShow(String language) {
+        try {
+            if (!language.equals(nullString)) {
                 return slashString + language;
             } else {
                 return emptyString;
             }
-        }
-        catch(NullPointerException ex){
+        } catch (NullPointerException ex) {
             return emptyString;
         }
     }
 
-    public void sendToFullInfo(View v, int position){
+    public void sendToFullInfo(View v, int position) {
         UserInfo uif = userList.get(position);
         SmallRepositoryInfo smif = new SmallRepositoryInfo();
-        for(int j = 0; j < smallRepositoryInfoList.size(); j++) {
+        for (int j = 0; j < smallRepositoryInfoList.size(); j++) {
             if (uif.getLogin().equals(smallRepositoryInfoList.get(j).getAuthorLogin())) {
                 smif = smallRepositoryInfoList.get(j);
             }
@@ -173,7 +169,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     public DatabaseHelper getHelper() {
         if (databaseUserHelper == null) {
-            databaseUserHelper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            databaseUserHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
         }
         return databaseUserHelper;
     }

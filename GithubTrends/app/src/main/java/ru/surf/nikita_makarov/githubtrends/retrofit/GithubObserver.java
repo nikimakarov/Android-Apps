@@ -1,10 +1,6 @@
 package ru.surf.nikita_makarov.githubtrends.retrofit;
 
-import java.util.List;
-
 import ru.surf.nikita_makarov.githubtrends.repository_utils.RepositoryInfoResponse;
-import ru.surf.nikita_makarov.githubtrends.users_utils.SmallRepositoryInfo;
-import ru.surf.nikita_makarov.githubtrends.users_utils.UserInfo;
 import ru.surf.nikita_makarov.githubtrends.users_utils.UserInfoResponse;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;

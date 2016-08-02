@@ -17,7 +17,6 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
-import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +32,6 @@ import ru.surf.nikita_makarov.githubtrends.retrofit.GithubApi;
 import ru.surf.nikita_makarov.githubtrends.retrofit.GithubService;
 import ru.surf.nikita_makarov.githubtrends.users_utils.SmallRepositoryInfo;
 import ru.surf.nikita_makarov.githubtrends.users_utils.UserAdapter;
-import ru.surf.nikita_makarov.githubtrends.retrofit.GithubObserver;
 import ru.surf.nikita_makarov.githubtrends.users_utils.UserInfo;
 import ru.surf.nikita_makarov.githubtrends.users_utils.UserInfoResponse;
 import ru.surf.nikita_makarov.githubtrends.utils.ConnectionInspector;
@@ -61,6 +59,9 @@ public class PageFragment extends Fragment {
     final private static String ACCESS_TOKEN = "30d3d2219dbe26ddd33ff58c44d7f22000a078fd";
     protected static final String languageString = "language";
     protected static final String dateString = "date";
+    private static final String starsString = "stars";
+    private static final String descString = "desc";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,7 @@ public class PageFragment extends Fragment {
             language = savedInstanceState.getString(languageString);
         }
         pageNumber = getArguments() != null ? getArguments().getInt(numberString) : 1;
+        this.setRetainInstance(true);
     }
 
     public static PageFragment newInstance(int page) {
@@ -104,7 +106,11 @@ public class PageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragmentView = inflater.inflate(R.layout.fragment, container, false);
+        if (fragmentView == null) {
+            fragmentView = inflater.inflate(R.layout.fragment, container, false);
+        } else {
+            ((ViewGroup) fragmentView).removeView(fragmentView);
+        }
         return fragmentView;
     }
 
@@ -153,7 +159,9 @@ public class PageFragment extends Fragment {
     }
 
     public void repositoryCall(GithubApi githubApi) {
-        GithubObserver.repositoryCall(githubApi, parameters).subscribe(new Subscriber<RepositoryInfoResponse>() {
+        final Observable<RepositoryInfoResponse> gitHubRepository = githubApi.getRepositories(parameters, starsString, descString, 1, 20);
+        gitHubRepository.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<RepositoryInfoResponse>() {
             @Override
             public final void onCompleted() {
                 progressBar.setVisibility(View.GONE);
@@ -175,7 +183,9 @@ public class PageFragment extends Fragment {
     }
 
     public void shortInfoRepositoryCall(GithubApi githubApi) {
-        GithubObserver.shortInfoRepositoryCall(githubApi, parameters).subscribe(new Subscriber<UserInfoResponse>() {
+        final Observable<UserInfoResponse> gitHubUserInfoRepository = githubApi.getSmallRepositories(parameters, starsString, descString, 1, 20);
+        gitHubUserInfoRepository.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<UserInfoResponse>() {
             @Override
             public final void onCompleted() {
                 userAdapter.notifyDataSetChanged();

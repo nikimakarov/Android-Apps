@@ -27,9 +27,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = getIntent();
-        date = intent.getStringExtra(dateString);
-        language = intent.getStringExtra(languageString);
+        if (savedInstanceState == null) {
+            Intent intent = getIntent();
+            date = intent.getStringExtra(dateString);
+            language = intent.getStringExtra(languageString);
+        }
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         viewPager = (ViewPager) findViewById(R.id.pager);
