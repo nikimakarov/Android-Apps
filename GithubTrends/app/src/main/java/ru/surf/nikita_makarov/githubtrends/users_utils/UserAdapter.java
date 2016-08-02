@@ -108,7 +108,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 smi = smallRepositoryInfoList.get(j);
             }
         }
-        Picasso.with(context).setLoggingEnabled(true);
+        //Picasso.with(context).setLoggingEnabled(true);
         Picasso.with(context).load(ui.getAvatar_url())
                 .noFade()
                 .placeholder(R.drawable.github_logo1)
@@ -116,10 +116,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 .into(userViewHolder.userPortraitImageView);
         String userLoginAndName;
         try {
-            userLoginAndName = ui.getLogin() + leftBracketString + ui.getName() + rightBracketString;
+            if (!ui.getName().equals(nullString)){
+                userLoginAndName = ui.getLogin() + leftBracketString + ui.getName() + rightBracketString;
+            }
+            else {
+                userLoginAndName = ui.getLogin();
+            }
         }
         catch(NullPointerException ex){
-            userLoginAndName = emptyString;
+            userLoginAndName = ui.getLogin();
         }
         userViewHolder.loginWithNameTextView.setText(userLoginAndName);
         String repositoryNameAndLanguage = smi.getName() + languageShow(smi.getLanguage());
@@ -148,13 +153,19 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     public void sendToFullInfo(View v, int position){
         UserInfo uif = userList.get(position);
+        SmallRepositoryInfo smif = new SmallRepositoryInfo();
+        for(int j = 0; j < smallRepositoryInfoList.size(); j++) {
+            if (uif.getLogin().equals(smallRepositoryInfoList.get(j).getAuthorLogin())) {
+                smif = smallRepositoryInfoList.get(j);
+            }
+        }
         Intent intent = new Intent(v.getContext(), UserExtendedInfoActivity.class);
         intent.putExtra(avatarString, uif.getAvatar_url());
         intent.putExtra(loginString, uif.getLogin());
         intent.putExtra(nameString, uif.getName());
         intent.putExtra(locationString, uif.getLocation());
         intent.putExtra(companyString, uif.getCompany());
-        intent.putExtra(repoString, smi.getName());
+        intent.putExtra(repoString, smif.getName());
         intent.putExtra(blogString, uif.getBlog());
         intent.putExtra(emailString, uif.getEmail());
         context.startActivity(intent);

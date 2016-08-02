@@ -25,14 +25,19 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     private static final String languageString = "language";
     private static final String dateString = "date";
     private static final String cString = "C";
+    private static final String cPlusPlusString = "C++";
+    private static final String cssString = "CSS";
     private static final String javaString = "Java";
     private static final String pythonString = "Python";
     private static final String javaScriptString = "Javascript";
     private static final String objCString = "Objective-C";
     private static final String swiftString = "Swift";
+    private static final String shellString = "Shell";
+    private static final String cSharpString = "C#";
+    private static final String phpString = "PHP";
+    private static final String rubyString = "Ruby";
     private static final String htmlString = "HTML";
-    private static final String scalaString = "Scala";
-    private static final String allString = "all";
+    private static final String allLanguagesString = "all languages";
     private static final String todayString = "today";
     private static final String weekString = "week";
     private static final String monthString = "month";
@@ -45,7 +50,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        filterImageView = (ImageView)findViewById(R.id.filterImageView);
+        filterImageView = (ImageView) findViewById(R.id.filterImageView);
         languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
         dateSpinner = (Spinner) findViewById(R.id.dateSpinner);
         setLanguageSpinner();
@@ -59,7 +64,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         });
     }
 
-    protected void setAnimationToImageView(ImageView imageView){
+    protected void setAnimationToImageView(ImageView imageView) {
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setInterpolator(new AccelerateInterpolator());
         fadeOut.setStartOffset(500);
@@ -67,8 +72,8 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         imageView.startAnimation(fadeOut);
     }
 
-    protected void dataTransitionToMainActivity(View v){
-        languageChoice = languageSpinner.getSelectedItem().toString();
+    protected void dataTransitionToMainActivity(View v) {
+        languageChoice = searchLanguageFormatter(languageSpinner.getSelectedItem().toString());
         dateChoice = dateSpinner.getSelectedItem().toString();
         Intent intentMainActivity = new Intent(v.getContext(), MainActivity.class);
         intentMainActivity.putExtra(languageString, languageChoice);
@@ -76,25 +81,43 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         startActivity(intentMainActivity);
     }
 
-    protected void setLanguageSpinner(){
+    protected String searchLanguageFormatter(String language) {
+        if (language.equals("C++")) {
+            language = "Cpp";
+        }
+        if (language.equals("C#")) {
+            language = "C%23";
+        }
+        if (language.equals("all languages")) {
+            language = "all";
+        }
+        return language;
+    }
+
+    protected void setLanguageSpinner() {
         languageSpinner.setOnItemSelectedListener(this);
         List<String> languageCategories = new ArrayList<String>();
-        languageCategories.add(cString);
-        languageCategories.add(javaString);
-        languageCategories.add(pythonString);
         languageCategories.add(javaScriptString);
+        languageCategories.add(pythonString);
+        languageCategories.add(javaString);
+        languageCategories.add(cssString);
+        languageCategories.add(rubyString);
+        languageCategories.add(phpString);
+        languageCategories.add(cString);
+        languageCategories.add(cPlusPlusString);
+        languageCategories.add(shellString);
+        languageCategories.add(cSharpString);
         languageCategories.add(objCString);
-        languageCategories.add(swiftString);
         languageCategories.add(htmlString);
-        languageCategories.add(scalaString);
-        languageCategories.add(allString);
+        languageCategories.add(swiftString);
+        languageCategories.add(allLanguagesString);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, languageCategories);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         languageSpinner.setAdapter(dataAdapter);
     }
 
-    protected void setDateSpinner(){
+    protected void setDateSpinner() {
         dateSpinner.setOnItemSelectedListener(this);
         List<String> dateCategories = new ArrayList<String>();
         dateCategories.add(todayString);
@@ -112,6 +135,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
     }
+
     public void onNothingSelected(AdapterView<?> arg0) {
     }
 

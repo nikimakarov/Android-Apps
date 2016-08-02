@@ -45,7 +45,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
         notifyDataSetChanged();
     }
 
-    public void addDataAndSendRepositoriesToDatabase(List<RepositoryInfo> addList, Context addContext){
+    public void addDataAndSendRepositoriesToDatabase(List<RepositoryInfo> addList, Context addContext) {
         try {
             context = addContext;
             repositoryList = addList;
@@ -55,8 +55,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
                 RepositoryDetails repositorySpecimen = new RepositoryDetails(repositoryList.get(i));
                 repoDao.create(repositorySpecimen);
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
@@ -88,7 +87,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
         repositoryViewHolder.authorWithLanguageTextView.setText(descriptionBasic);
         repositoryViewHolder.descriptionTextView.setText(ri.getDescription());
         repositoryViewHolder.forksTextView.setText(String.format(Locale.ROOT, formatString, ri.getForks_count()));
-        repositoryViewHolder.starsTextView.setText(String.format(Locale.ROOT, formatString,ri.getStargazers_count()));
+        repositoryViewHolder.starsTextView.setText(String.format(Locale.ROOT, formatString, ri.getStargazers_count()));
         repositoryViewHolder.mainLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,27 +96,26 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
         });
     }
 
-    public String languageShow(String language){
-        try{
-            if (!language.equals(nullString)){
+    public String languageShow(String language) {
+        try {
+            if (!language.equals(nullString)) {
                 return onString + language;
             } else {
                 return emptyString;
             }
-        }
-        catch(NullPointerException ex){
+        } catch (NullPointerException ex) {
             return emptyString;
         }
     }
 
-    public void sendToWebPage(String url){
+    public void sendToWebPage(String url) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         context.startActivity(browserIntent);
     }
 
     public DatabaseHelper getHelper() {
         if (databaseRepositoryHelper == null) {
-            databaseRepositoryHelper = OpenHelperManager.getHelper(context,DatabaseHelper.class);
+            databaseRepositoryHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
         }
         return databaseRepositoryHelper;
     }
@@ -134,7 +132,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Re
         public RepositoryViewHolder(View v) {
             super(v);
             mainLinearLayout = (LinearLayout) v.findViewById(R.id.linearLayoutRepository);
-            repositoryTextView = (TextView)  v.findViewById(R.id.login);
+            repositoryTextView = (TextView) v.findViewById(R.id.login);
             authorWithLanguageTextView = (TextView) v.findViewById(R.id.language);
             descriptionTextView = (TextView) v.findViewById(R.id.description);
             forksTextView = (TextView) v.findViewById(R.id.forks);

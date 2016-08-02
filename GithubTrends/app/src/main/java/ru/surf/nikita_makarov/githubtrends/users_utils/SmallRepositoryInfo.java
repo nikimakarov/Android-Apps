@@ -1,4 +1,5 @@
 package ru.surf.nikita_makarov.githubtrends.users_utils;
+
 import ru.surf.nikita_makarov.githubtrends.database.UserDetails;
 
 public class SmallRepositoryInfo {
@@ -11,7 +12,9 @@ public class SmallRepositoryInfo {
         return owner.getLogin();
     }
 
-    public void setAuthorLogin(String login) { owner.setLogin(login);}
+    public void setAuthorLogin(String login) {
+        owner.setLogin(login);
+    }
 
     public String getName() {
         return name;

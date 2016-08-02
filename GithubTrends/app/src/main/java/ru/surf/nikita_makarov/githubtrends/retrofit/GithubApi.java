@@ -1,16 +1,16 @@
-package ru.surf.nikita_makarov.githubtrends.utils;
+package ru.surf.nikita_makarov.githubtrends.retrofit;
 
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import ru.surf.nikita_makarov.githubtrends.repository_utils.RepositoryInfoResponse;
 import ru.surf.nikita_makarov.githubtrends.users_utils.UserInfo;
 import ru.surf.nikita_makarov.githubtrends.users_utils.UserInfoResponse;
+import rx.Observable;
 
-public interface GitHubService {
+public interface GithubApi {
     @GET("search/repositories")
-    Call<RepositoryInfoResponse> repositories(
+    Observable<RepositoryInfoResponse> getRepositories(
             @Query(value = "q", encoded = true) String query,
             @Query("sort") String sort,
             @Query("order") String order,
@@ -18,7 +18,7 @@ public interface GitHubService {
             @Query("per_page") int per_page);
 
     @GET("search/repositories")
-    Call<UserInfoResponse> smallRepositories(
+    Observable<UserInfoResponse> getSmallRepositories(
             @Query(value = "q", encoded = true) String query,
             @Query("sort") String sort,
             @Query("order") String order,
@@ -26,8 +26,8 @@ public interface GitHubService {
             @Query("per_page") int per_page);
 
     @GET("users/{username}")
-    Call<UserInfo> users(
-            @Path("username")String user,
+    Observable<UserInfo> getUsers(
+            @Path("username") String user,
             @Query("access_token") String token);
 
 }

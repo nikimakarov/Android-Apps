@@ -7,6 +7,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import ru.surf.nikita_makarov.githubtrends.R;
 import ru.surf.nikita_makarov.githubtrends.utils.DepthPageTransformer;
@@ -41,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
                 tabLayout.setupWithViewPager(viewPager);
             }
         });
-}
+    }
+
     @Override
     public void onBackPressed() {
         if (viewPager.getCurrentItem() == 0) {
@@ -51,11 +54,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public String getDate(){
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.filter, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        if (item.getItemId() == R.id.filter_button) {
+            Intent intentObject = new Intent(this, SearchActivity.class);
+            startActivity(intentObject);
+        }
+        return true;
+    }
+
+
+    public String getDate() {
         return date;
     }
 
-    public String getLanguage(){
+    public String getLanguage() {
         return language;
     }
 

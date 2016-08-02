@@ -1,7 +1,7 @@
 package ru.surf.nikita_makarov.githubtrends.fragment;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,26 +10,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.annotation.Nullable;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
-import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import ru.surf.nikita_makarov.githubtrends.R;
 import ru.surf.nikita_makarov.githubtrends.activity.MainActivity;
 import ru.surf.nikita_makarov.githubtrends.database.DatabaseHelper;
@@ -38,46 +29,46 @@ import ru.surf.nikita_makarov.githubtrends.database.UserDetails;
 import ru.surf.nikita_makarov.githubtrends.repository_utils.RepositoryAdapter;
 import ru.surf.nikita_makarov.githubtrends.repository_utils.RepositoryInfo;
 import ru.surf.nikita_makarov.githubtrends.repository_utils.RepositoryInfoResponse;
+import ru.surf.nikita_makarov.githubtrends.retrofit.GithubApi;
+import ru.surf.nikita_makarov.githubtrends.retrofit.GithubService;
 import ru.surf.nikita_makarov.githubtrends.users_utils.SmallRepositoryInfo;
 import ru.surf.nikita_makarov.githubtrends.users_utils.UserAdapter;
+import ru.surf.nikita_makarov.githubtrends.retrofit.GithubObserver;
 import ru.surf.nikita_makarov.githubtrends.users_utils.UserInfo;
 import ru.surf.nikita_makarov.githubtrends.users_utils.UserInfoResponse;
-import ru.surf.nikita_makarov.githubtrends.utils.GitHubService;
+import ru.surf.nikita_makarov.githubtrends.utils.ConnectionInspector;
+import ru.surf.nikita_makarov.githubtrends.utils.DateFormatter;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class PageFragment extends Fragment {
 
     private int pageNumber;
-    private RecyclerView mRecyclerView;
     private View fragmentView;
+    private RecyclerView mRecyclerView;
+    private ProgressBar progressBar;
     private RepositoryAdapter repositoryAdapter;
     private UserAdapter userAdapter;
-    private DatabaseHelper databaseHelper = null;
     private String date;
     private String language;
     private String parameters;
+    private DatabaseHelper databaseHelper = null;
     private static final String numberString = "num";
     private static final String databaseNameString = "github_trends.db";
     private static final String noConnectionString = "No internet connection!";
-    private static final String starsString = "stars";
-    private static final String descString = "desc";
-    private static final String createdQString = "created:>=";
-    private static final String languageQString = "+language:";
-    private static final String errorString = "Error: ";
-    private static final String zeroString = "0";
-    private static final String emptyString = "";
-    private static final String todayString = "today";
-    private static final String weekString = "week";
-    private static final String monthString = "month";
-    private static final String yearString = "year";
-    private static final String dashString = "-";
-    private static final String allTimeDateString = "2000-01-01";
-    private static final String allTimeString = "all time";
-    final private static String API_URL = "https://api.github.com/";
     final private static String ACCESS_TOKEN = "30d3d2219dbe26ddd33ff58c44d7f22000a078fd";
+    protected static final String languageString = "language";
+    protected static final String dateString = "date";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            date = savedInstanceState.getString(dateString);
+            language = savedInstanceState.getString(languageString);
+        }
         pageNumber = getArguments() != null ? getArguments().getInt(numberString) : 1;
     }
 
@@ -89,16 +80,24 @@ public class PageFragment extends Fragment {
         return fragment;
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(dateString, date);
+        outState.putString(languageString, language);
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         MainActivity mainActivity;
-
         if (context instanceof MainActivity) {
             mainActivity = (MainActivity) context;
-            date = mainActivity.getDate();
-            language = mainActivity.getLanguage();
+            if (language == null && date == null) {
+                date = mainActivity.getDate();
+                language = mainActivity.getLanguage();
+            }
         }
 
     }
@@ -110,97 +109,117 @@ public class PageFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.recycler_main);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        if (savedInstanceState == null) {
+            mRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.recycler_main);
+            progressBar = (ProgressBar) fragmentView.findViewById(R.id.progress);
+            progressBar.getIndeterminateDrawable().setColorFilter(0xFFEA3A78, PorterDuff.Mode.SRC_IN);
+            mRecyclerView.setVisibility(View.GONE);
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            if (pageNumber == 0) {
+                repositoryAdapter = new RepositoryAdapter();
+                mRecyclerView.setAdapter(repositoryAdapter);
+            }
+            if (pageNumber == 1) {
+                userAdapter = new UserAdapter();
+                mRecyclerView.setAdapter(userAdapter);
+            }
+            if (!ConnectionInspector.hasNetwork(getActivity())) {
+                DatabaseConnectionStart();
+            } else {
+                RetrofitConnectionStart();
+            }
+        }
+    }
+
+    public void DatabaseConnectionStart() {
+        progressBar.setVisibility(View.GONE);
+        Toast.makeText(getContext(), noConnectionString, Toast.LENGTH_LONG).show();
+        databaseStart(pageNumber);
+    }
+
+    public void RetrofitConnectionStart() {
+        getContext().deleteDatabase(databaseNameString);
+        parameters = DateFormatter.makeParamsForQuery(date, language);
+        GithubApi githubApi = GithubService.createGithubService();
         if (pageNumber == 0) {
-            repositoryAdapter = new RepositoryAdapter();
-            mRecyclerView.setAdapter(repositoryAdapter);
+            repositoryCall(githubApi);
         }
         if (pageNumber == 1) {
-            userAdapter = new UserAdapter();
-            mRecyclerView.setAdapter(userAdapter);
+            shortInfoRepositoryCall(githubApi);
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        parameters = makeParamsForQuery();
-        if (!isOnline()) {
-            Toast.makeText(getContext(), noConnectionString, Toast.LENGTH_LONG).show();
-            databaseStart();
-        } else {
-            getContext().deleteDatabase(databaseNameString);
-            retrofitStart();
-        }
-    }
-
-    public void retrofitStart() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient httpClient = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(API_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient)
-                .build();
-        GitHubService gitHubService = retrofit.create(GitHubService.class);
-        if (pageNumber == 0) {
-            repositoryCall(gitHubService);
-        }
-        if (pageNumber == 1) {
-            shortInfoRepositoryCall(gitHubService);
-            userCall(gitHubService);
-        }
-    }
-
-    public void repositoryCall(GitHubService gitHubService) {
-        Call<RepositoryInfoResponse> call = gitHubService.repositories(parameters, starsString, descString, 1, 20);
-        call.enqueue(new Callback<RepositoryInfoResponse>() {
+    public void repositoryCall(GithubApi githubApi) {
+        GithubObserver.repositoryCall(githubApi, parameters).subscribe(new Subscriber<RepositoryInfoResponse>() {
             @Override
-            public void onResponse(Call<RepositoryInfoResponse> call, Response<RepositoryInfoResponse> response) {
-                repositoryAdapter.clearData();
-                repositoryAdapter.addDataAndSendRepositoriesToDatabase(response.body().getItems(), getContext());
+            public final void onCompleted() {
+                progressBar.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
                 repositoryAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onFailure(Call<RepositoryInfoResponse> call, Throwable t) {
-                Log.d(errorString, t.getMessage());
+            public final void onError(Throwable e) {
+                Log.e("repositoryCall", e.getMessage());
+            }
+
+            @Override
+            public final void onNext(RepositoryInfoResponse response) {
+                repositoryAdapter.clearData();
+                repositoryAdapter.addDataAndSendRepositoriesToDatabase(response.getItems(), getContext());
             }
         });
     }
 
-    public void shortInfoRepositoryCall(GitHubService gitHubService) {
-        Call<UserInfoResponse> call = gitHubService.smallRepositories(parameters, starsString, descString, 1, 20);
-        try {
-            userAdapter.clearRepositoryData();
-            userAdapter.addRepositoryData(call.execute().body().getItems(), getContext());
-            userAdapter.notifyDataSetChanged();
-        } catch (IOException io) {
-            Log.d(errorString, io.getMessage());
-        }
+    public void shortInfoRepositoryCall(GithubApi githubApi) {
+        GithubObserver.shortInfoRepositoryCall(githubApi, parameters).subscribe(new Subscriber<UserInfoResponse>() {
+            @Override
+            public final void onCompleted() {
+                userAdapter.notifyDataSetChanged();
+                userCall(githubApi);
+            }
+
+            @Override
+            public final void onError(Throwable e) {
+                Log.e("userInfoRepositoryCall", e.getMessage());
+            }
+
+            @Override
+            public final void onNext(UserInfoResponse response) {
+                userAdapter.clearRepositoryData();
+                userAdapter.addRepositoryData(response.getItems(), getContext());
+            }
+        });
     }
 
-    public void userCall(GitHubService gitHubService) {
+    public void userCall(GithubApi githubApi) {
         userAdapter.clearUserData();
+        List<SmallRepositoryInfo> repoList = userAdapter.smallRepositoryInfoList;
         for (int i = 0; userAdapter.smallRepositoryInfoList.size() > i & i < 20; i++) {
-            Call<UserInfo> call = gitHubService.users(userAdapter.smallRepositoryInfoList.get(i).getAuthorLogin(), ACCESS_TOKEN);
-            call.enqueue(new Callback<UserInfo>() {
-                @Override
-                public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-                    userAdapter.sendUserToDatabase(response.body());
-                    userAdapter.notifyDataSetChanged();
-                }
+            final Observable<UserInfo> gitHubUser = githubApi.getUsers(repoList.get(i).getAuthorLogin(), ACCESS_TOKEN);
+            gitHubUser.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<UserInfo>() {
+                        @Override
+                        public final void onCompleted() {
+                            progressBar.setVisibility(View.GONE);
+                            mRecyclerView.setVisibility(View.VISIBLE);
+                            userAdapter.notifyDataSetChanged();
+                        }
 
-                @Override
-                public void onFailure(Call<UserInfo> call, Throwable t) {
-                    Log.d(errorString, t.getMessage());
-                }
-            });
+                        @Override
+                        public final void onError(Throwable e) {
+                            Log.e("userCall", e.getMessage());
+                        }
+
+                        @Override
+                        public final void onNext(UserInfo response) {
+                            userAdapter.sendUserToDatabase(response);
+                        }
+                    });
         }
     }
 
@@ -211,16 +230,16 @@ public class PageFragment extends Fragment {
         return databaseHelper;
     }
 
-    public void databaseStart() {
+    public void databaseStart(int pageNumber) {
         if (pageNumber == 0) {
-            repositoryDatabaseCall();
+            repositoryDatabaseCall(repositoryAdapter);
         }
         if (pageNumber == 1) {
-            userDatabaseCall();
+            userDatabaseCall(userAdapter);
         }
     }
 
-    public void repositoryDatabaseCall() {
+    public void repositoryDatabaseCall(RepositoryAdapter repositoryAdapter) {
         try {
             final Dao<RepositoryDetails, Integer> repositoryDao = getHelper().getRepositoryDao();
             List<RepositoryDetails> repositoryList = repositoryDao.queryForAll();
@@ -242,7 +261,7 @@ public class PageFragment extends Fragment {
         }
     }
 
-    public void userDatabaseCall() {
+    public void userDatabaseCall(UserAdapter userAdapter) {
         try {
             final Dao<UserDetails, Integer> userDao = getHelper().getUserDao();
             List<UserDetails> userList = userDao.queryForAll();
@@ -271,36 +290,4 @@ public class PageFragment extends Fragment {
 
     }
 
-    public boolean isOnline() {
-        String cs = Context.CONNECTIVITY_SERVICE;
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(cs);
-        return cm.getActiveNetworkInfo() != null;
-    }
-
-    public String makeParamsForQuery() {
-        return createdQString + dateInterval(date) + languageQString + language;
-    }
-
-    public String dateInterval(String dateFilter) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        String zero1 = month < 10 ? zeroString : emptyString;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        String zero2 = day < 10 ? zeroString : emptyString;
-        switch (dateFilter) {
-            case todayString:
-                return (year + dashString + zero1 + month + dashString + zero2 + day);
-            case weekString:
-                return (year + dashString + zero1 + month + dashString + zero2 + (day - 7));
-            case monthString:
-                return (year + dashString + zero1 + (month - 1) + dashString + zero2 + day);
-            case yearString:
-                return ((year - 1) + dashString + zero1 + month + dashString + zero2 + day);
-            case allTimeString:
-                return allTimeDateString;
-            default:
-                return (year + dashString + zero1 + month + dashString + zero2 + day);
-        }
-    }
 }

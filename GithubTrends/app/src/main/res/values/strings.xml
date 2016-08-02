@@ -15,4 +15,7 @@
     <string name="filter">Filter the search</string>
     <string name="language_title">Language:</string>
     <string name="date_title">Created:</string>
+    <string name="profile">Profile</string>
+    <string name="user_login">user login</string>
+    <string name="user_info">user info</string>
 </resources>

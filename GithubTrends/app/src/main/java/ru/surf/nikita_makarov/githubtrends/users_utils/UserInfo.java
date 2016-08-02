@@ -1,4 +1,5 @@
 package ru.surf.nikita_makarov.githubtrends.users_utils;
+
 import ru.surf.nikita_makarov.githubtrends.database.UserDetails;
 
 public class UserInfo {

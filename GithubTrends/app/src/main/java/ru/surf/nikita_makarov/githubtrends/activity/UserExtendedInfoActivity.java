@@ -3,6 +3,7 @@ package ru.surf.nikita_makarov.githubtrends.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,12 +15,8 @@ public class UserExtendedInfoActivity extends AppCompatActivity {
 
     private ImageView userImageView;
     private TextView loginTextView;
-    private TextView fullNameTextView;
-    private TextView locationTextView;
-    private TextView companyTextView;
-    private TextView repoTextView;
-    private TextView blogTextView;
-    private TextView emailTextView;
+    private TextView fullInfoTextView;
+    private Intent intent;
     private static final String avatarString = "avatar";
     private static final String locationString = "location";
     private static final String emailString = "email";
@@ -34,6 +31,7 @@ public class UserExtendedInfoActivity extends AppCompatActivity {
     private static final String repoPartString = "trending repo: ";
     private static final String companyPartString = "company: ";
     private static final String namePartString = "full name:";
+    private static final String transitionString = "\n";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,24 +41,19 @@ public class UserExtendedInfoActivity extends AppCompatActivity {
         setIntentData();
     }
 
-    public void setViews(){
-        userImageView = (ImageView)findViewById(R.id.userImageView);
+    public void setViews() {
+        userImageView = (ImageView) findViewById(R.id.userImageView);
         loginTextView = (TextView) findViewById(R.id.loginTextView);
-        fullNameTextView = (TextView) findViewById(R.id.fullNameTextView);
-        locationTextView = (TextView) findViewById(R.id.locationTextView);
-        companyTextView = (TextView) findViewById(R.id.companyTextView);
-        repoTextView = (TextView) findViewById(R.id.repoTextView);
-        blogTextView = (TextView) findViewById(R.id.blogTextView);
-        emailTextView = (TextView) findViewById(R.id.emailTextView);
+        fullInfoTextView = (TextView) findViewById(R.id.fullInfoTextView);
     }
 
-    public void setIntentData(){
-        Intent intent = getIntent();
-        setUserPic(intent);
-        setUserData(intent);
+    public void setIntentData() {
+        intent = getIntent();
+        setUserPic();
+        setUserData();
     }
 
-    public void setUserPic(Intent intent){
+    public void setUserPic() {
         Picasso.with(getApplicationContext()).load(intent.getStringExtra(avatarString))
                 .noFade()
                 .placeholder(R.drawable.github_logo1)
@@ -68,19 +61,24 @@ public class UserExtendedInfoActivity extends AppCompatActivity {
                 .into(userImageView);
     }
 
-    public void setUserData(Intent intent){
+    public void setUserData() {
         loginTextView.setText(intent.getStringExtra(loginString));
-        String fullName = namePartString + intent.getStringExtra(nameString);
-        fullNameTextView.setText(fullName);
-        String location = locationPartString + intent.getStringExtra(locationString);
-        locationTextView.setText(location);
-        String company = companyPartString + intent.getStringExtra(companyString);
-        companyTextView.setText(company);
-        String repository = repoPartString + intent.getStringExtra(repoString);
-        repoTextView.setText(repository);
-        String blog = blogPartString + intent.getStringExtra(blogString);
-        blogTextView.setText(blog);
-        String email = emailPartString + intent.getStringExtra(emailString);
-        emailTextView.setText(email);
+        String fullInfo = addString(namePartString, nameString) +
+                addString(locationPartString, locationString) +
+                addString(companyPartString, companyString) +
+                addString(repoPartString, repoString) +
+                addString(blogPartString, blogString) +
+                addString(emailPartString, emailString);
+        fullInfoTextView.setText(fullInfo);
+        Linkify.addLinks(fullInfoTextView, Linkify.ALL);
     }
+
+    public String addString(String title, String data) {
+        if (intent.getStringExtra(data) != null) {
+            return title + intent.getStringExtra(data) + transitionString;
+        } else {
+            return "";
+        }
+    }
+
 }
